@@ -109,10 +109,10 @@
      The flip is driven by :hover, which never fires on a touch screen, so the
      back of the coin would be unreachable there. A tap flips it, a second tap
      flips it back, and if neither happens it returns on its own after three
-     seconds. Gated on (hover: none) so a mouse still uses the CSS path and the
-     two never fight over the same element. */
+     seconds. This is the exact complement of the (hover: hover) query in the
+     stylesheet, so every device gets one path and no device gets both. */
   var coin = document.querySelector('.logo-container');
-  if (coin && window.matchMedia('(hover: none)').matches) {
+  if (coin && !window.matchMedia('(hover: hover)').matches) {
     var coinTimer;
 
     coin.addEventListener('click', function () {

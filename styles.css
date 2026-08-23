@@ -748,9 +748,13 @@ header.hero{
   transition: transform .6s ease;
 }
 
-/* .is-flipped is the touch-screen equivalent of :hover — set by main.js on
-   tap, since a touch device never fires hover at all. */
-.logo-container:hover .logo-flipper,
+/* .is-flipped is the touch-screen equivalent of :hover, set by main.js on tap.
+   The hover rule is gated because a touch browser leaves :hover stuck on the
+   last element tapped — ungated, it would pin the coin face-up and no amount of
+   removing the class would flip it back. */
+@media (hover: hover){
+  .logo-container:hover .logo-flipper{ transform: rotateY(180deg); }
+}
 .logo-container.is-flipped .logo-flipper{
   transform: rotateY(180deg);
 }
@@ -773,7 +777,11 @@ header.hero{
   transition: box-shadow var(--glow-t) ease;
 }
 
-.logo-container:hover .logo-face,
+@media (hover: hover){
+  .logo-container:hover .logo-face{
+    box-shadow: 0 0 30px var(--accent), 0 0 64px var(--accent-soft);
+  }
+}
 .logo-container.is-flipped .logo-face{
   box-shadow: 0 0 30px var(--accent), 0 0 64px var(--accent-soft);
 }
@@ -1236,7 +1244,14 @@ footer{
               transform .08s ease;
 }
 
-.work-card:hover,
+@media (hover: hover){
+  .work-card:hover{
+    border-color: var(--accent);
+    box-shadow:
+      0 0 24px var(--accent-soft),
+      0 0 48px var(--accent-faint);
+  }
+}
 .work-card:focus-within,
 .work-card.is-open{
   border-color: var(--accent);
@@ -1280,7 +1295,9 @@ footer{
 }
 .card-reveal > *{ overflow: hidden; }
 
-.work-card:hover .card-reveal,
+@media (hover: hover){
+  .work-card:hover .card-reveal{ grid-template-rows: 1fr; opacity: 1; }
+}
 .work-card:focus-within .card-reveal,
 .work-card.is-open .card-reveal{
   grid-template-rows: 1fr;
