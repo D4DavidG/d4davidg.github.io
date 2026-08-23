@@ -138,8 +138,7 @@
       <p>
         Knights Counsel replaces manual folder-tree searching with a conversational interface
         inside Microsoft Teams. An authorized user asks a question and receives an answer drawn
-        only from the office's own documents, with citations linking back to the source files. A
-        second capability lets a user file new documents through the same conversation, with the
+        only from the office's own documents, with citations linking back to the source files. The tool also lets a user file new documents through the same conversation, with the
         assistant proposing a category and metadata for the user to confirm before anything is
         written.
       </p>
@@ -183,21 +182,19 @@
       <h2 id="decisions">What I decided</h2>
 
       <div class="decision">
-        <h3>Two agents, not six</h3>
+        <h3>Two agents main agents</h3>
         <p>
-          I originally designed a six-agent architecture: one agent per document category, plus a
-          dedicated search agent and a conflict-resolution agent. It was clean on paper and I had
-          already written the specification documents for it.
+          We would be using one agent for for document retrieval and another for document classification, with the first agent owning all user-facing replies and the second agent in charge of classification and all adding the files to the database.
         </p>
         <p>
           When I looked at the evaluation logs, there were zero retrieval-precision failures
           caused by mixed document types — which was the entire justification for splitting by
-          category. Child agents also inherit the parent's knowledge source, which removed the
+          category. The child agent also inherits the parent's knowledge source, which removed the
           folder scoping the split was supposed to buy. Meanwhile every orchestration hop cost
           latency and per-message credits.
         </p>
         <p>
-          I collapsed it to two: an <strong>Agent Manager</strong> owning all search, citation,
+          We have the first agent, the <strong>Agent Manager</strong> owning all search, citation,
           conflict handling, and every reply the user sees, and a <strong>Document Sorting</strong>
           child agent owning classification and all writes. Only the Agent Manager speaks to the
           user, stated as a standing principle so that adding a delegation target later is an
@@ -209,18 +206,12 @@
           path is now attached to exactly one agent — never to both a parent and a child, and never
           to two children.
         </p>
-        <p class="decision-rejected">
-          <strong>Rejected:</strong> the six-agent topology. Recorded as an architecture decision
-          record rather than quietly deleted, so the reasoning survives for whoever picks this up
-          next.
-        </p>
       </div>
 
       <div class="decision">
         <h3>Where the line between relay and advice actually falls</h3>
         <p>
-          A naive reading of "no legal advice" would make the tool useless. Surfacing a clause the
-          user intends to reuse is relay — the agent is reporting what exists. What converts a
+          The line between relaying information and providing advice is not always clear. What converts a
           response into advice is a recommendation or prediction layered on top of the citation.
         </p>
         <p>
@@ -427,7 +418,7 @@
         <li>
           Build the evaluation suite before the agent, not alongside it. Several instruction
           revisions were spent chasing behaviors that a test case would have specified precisely in
-          the first place.
+          the first place. We where unable to do this as our team was still in the early stages of learning the platform and its limitations, but I would have done this if I had the chance to do it again.
         </li>
         <li>
           Establish the multi-run rule at the start. Early single-run comparisons produced
@@ -444,17 +435,17 @@
       <h2 id="artifacts">Artifacts</h2>
       <ul>
         <li>
-          <strong>Technical white paper, v1.0</strong> (August 2026) — co-author, and sole author
+          <strong>Technical white paper, v1.0</strong> (August 2026): co-author, and sole author
           of the system design and behavior specification sections. Available on request.
         </li>
         <li>
-          <strong>Final design document, v2</strong> — contributing author, sole author of the
+          <strong>Final design document, v2</strong>: contributing author, sole author of the
           system design section, including the behavior test set and the architecture decision
           records. Available on request.
         </li>
         <li>
-          <strong>No live demo.</strong> The system runs inside a client tenant under NDA and
-          cannot be shown. That constraint is worth stating plainly rather than working around.
+          <strong>Demo restricted under NDA</strong>: While a working demo exists, the system runs inside a client tenant under NDA and
+          cannot be shown. 
         </li>
       </ul>
 

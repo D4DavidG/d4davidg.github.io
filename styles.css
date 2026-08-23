@@ -728,6 +728,10 @@ header.hero{
    transform-style back to `flat` and the flip stops being 3D. The circle crop
    therefore lives on each .logo-face instead. */
 /* --- coin size --- */
+@media (hover: none){
+  .logo-container{ cursor: pointer; }
+}
+
 .logo-container{
   width: 132px;
   height: 132px;
@@ -744,7 +748,10 @@ header.hero{
   transition: transform .6s ease;
 }
 
-.logo-container:hover .logo-flipper{
+/* .is-flipped is the touch-screen equivalent of :hover — set by main.js on
+   tap, since a touch device never fires hover at all. */
+.logo-container:hover .logo-flipper,
+.logo-container.is-flipped .logo-flipper{
   transform: rotateY(180deg);
 }
 
@@ -766,7 +773,8 @@ header.hero{
   transition: box-shadow var(--glow-t) ease;
 }
 
-.logo-container:hover .logo-face{
+.logo-container:hover .logo-face,
+.logo-container.is-flipped .logo-face{
   box-shadow: 0 0 30px var(--accent), 0 0 64px var(--accent-soft);
 }
 
@@ -1541,6 +1549,30 @@ article > h2,
   color: var(--text-2);
 }
 .decision-rejected strong{ color: var(--text); }
+
+/* =========================
+   Reference list
+   Hanging indent so the [Key] at the head of each entry stays scannable, and
+   :target highlights the one you just jumped to from a citation.
+========================= */
+.refs{
+  list-style: none;
+  padding-left: 0;
+  margin: 0;
+  font-size: .92rem;
+  color: var(--text-2);
+}
+.refs li{
+  padding: .5rem 0 .5rem 1.4rem;
+  text-indent: -1.4rem;
+  border-top: 1px solid var(--hair);
+}
+.refs li:first-child{ border-top: 0; }
+.refs li:target{
+  background: var(--accent-faint);
+  text-indent: 0;
+  padding-left: .6rem;
+}
 
 /* =========================
    Writing entries

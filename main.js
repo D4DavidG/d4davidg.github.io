@@ -105,6 +105,27 @@
     });
   });
 
+  /* ---- Coin flip on touch ----
+     The flip is driven by :hover, which never fires on a touch screen, so the
+     back of the coin would be unreachable there. A tap flips it, a second tap
+     flips it back, and if neither happens it returns on its own after three
+     seconds. Gated on (hover: none) so a mouse still uses the CSS path and the
+     two never fight over the same element. */
+  var coin = document.querySelector('.logo-container');
+  if (coin && window.matchMedia('(hover: none)').matches) {
+    var coinTimer;
+
+    coin.addEventListener('click', function () {
+      var flipped = coin.classList.toggle('is-flipped');
+      clearTimeout(coinTimer);
+      if (flipped) {
+        coinTimer = setTimeout(function () {
+          coin.classList.remove('is-flipped');
+        }, 3000);
+      }
+    });
+  }
+
   /* ---- Project card disclosure ----
      The summary is revealed on hover by CSS alone. This adds the tap path, so
      the cards are not hover-only on a touch screen. Clicks that land on a link

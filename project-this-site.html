@@ -62,14 +62,13 @@
 
   <header class="simple glass">
     <h1 class="neon">How this site is built</h1>
-    <p class="subtitle">You are standing inside the artifact. Here is what holds it up.</p>
+    <p class="subtitle">My portfolio coded from scratch exactly to my liking.</p>
   </header>
 
   <main id="main">
     <article>
       <p class="thesis">
-        Hand-written HTML and CSS. No framework, no build step, no dependency tree, no package
-        manager. Every accessibility feature described below is running on the page you are
+        Hand-written HTML and CSS. Every accessibility feature described below is running on the page you are
         reading right now.
       </p>
 
@@ -80,10 +79,6 @@
         </div>
         <div>
           <dt>Dependencies</dt>
-          <dd>None</dd>
-        </div>
-        <div>
-          <dt>Build step</dt>
           <dd>None</dd>
         </div>
         <div>
@@ -108,37 +103,56 @@
         what the browser receives.
       </p>
       <p>
-        That is a deliberate choice rather than a limitation I have not yet outgrown. At this size,
-        a build step would add a dependency tree to audit, a lockfile to keep current, and a
-        failure mode between writing a change and seeing it. What it would buy in return —
-        component reuse across nine pages — I currently pay for by editing the nav in nine places.
-        That trade flips somewhere around a dozen pages; see <a href="#limits">Limits</a>.
+        I made this choice deliberately. I have used static site generators and frameworks in the past,
+        and I always feel held back. The simplicity of the stack allows for maximum
+        control and flexibility, along with a reduced risk of dependency-related issues. Especially now with the help of modern LLM
+        coding capabilities, I can quickly make broad changes across the site and go back on my own to tweak the details.
+        I would only being to suffer with the architecture of the website when the pages start to multiply, see <a href="#limits">Limits</a>.
       </p>
 
       <h2 id="access">Accessibility, and why each piece is there</h2>
       <ul>
         <li>
-          <strong>A skip link</strong> as the first focusable element on every page. It is
-          positioned off-screen and pulled back with <code>:focus</code>, not hidden with
-          <code>display:none</code> — a display-hidden element cannot receive focus at all, which
-          defeats the purpose.
+          <strong>Readability comes first.</strong> Body text is Inter at 17px with a 1.62 line
+          height, picked for its large x-height — that is what keeps the smaller supporting lines
+          legible at the size they are set. The neon accent is loud, so it stays on borders,
+          headings and glows and never lands on a paragraph you actually have to read. Dates,
+          roles and captions use a lighter grey that still clears contrast, rather than the faint
+          grey most portfolios reach for.
         </li>
         <li>
-          <strong>Semantic landmarks with <code>aria-labelledby</code></strong> on every section,
-          pointing at that section's real heading. A screen-reader user gets a landmark list that
-          reads like the page's table of contents rather than "region, region, region."
+          <strong>The glow is a signal, not decoration.</strong> Cards and panels brighten when you
+          hover them, so whatever is under your cursor is obvious without anything moving or
+          jumping. It ramps up over about a second instead of snapping on, because an instant
+          switch reads as a flicker when you drag the cursor across a grid of cards. Getting that
+          to work took a real fix: a <code>box-shadow</code> only animates when both states have
+          the same number of layers, so every resting state carries a spare transparent layer just
+          so the transition has something to interpolate to.
         </li>
         <li>
-          <strong>Visible <code>:focus-visible</code> outlines</strong> rather than suppressed
-          ones. Removing focus rings is the single most common accessibility regression on
-          portfolio sites, and it makes a page unusable by keyboard while looking fine in a
-          screenshot.
+          <strong>Navigation.</strong> The first thing you land on when you press Tab is a "Skip to
+          main content" link. It sits off-screen until it is focused, then slides into view. It is
+          moved out of the way with positioning rather than hidden with
+          <code>display:none</code>, because an element that is display-hidden cannot be focused at
+          all — which would defeat the entire point of having it.
         </li>
         <li>
-          <strong><code>prefers-reduced-motion</code> honored</strong> on the smooth scroll, the
-          cursor-tracked glow, and the section-target animation. The glow is removed entirely
-          rather than slowed, because a cursor-following element is the specific thing that
-          triggers discomfort for some readers.
+          <strong>Landmarks are named, not anonymous.</strong> Sections are tied to their own
+          heading with <code>aria-labelledby</code>, so a screen reader reads out something closer
+          to a table of contents — "Currently", "Selected Work", "Skills" — instead of "region,
+          region, region."
+        </li>
+        <li>
+          <strong>You can always see where you are on a keyboard.</strong> Tab through the site and
+          whatever link or button you are on gets a visible outline. Browsers draw that ring by
+          default, and plenty of sites switch it off because it looks untidy in a screenshot.
+          Switching it off makes a site unusable without a mouse, so it stays.
+        </li>
+        <li>
+          <strong>Motion is optional.</strong> If your system is set to reduce motion, the smooth
+          scrolling, the section-jump highlight, the card reveal and the animated footer art all
+          switch off. The footer art is removed outright rather than slowed down, because a looping
+          GIF has no pause control — not showing it is the only honest answer.
         </li>
         <li>
           <strong>Colour is never the only signal.</strong> Links carry an underline on hover and
@@ -166,57 +180,49 @@
         <li>
           <strong>The accent</strong> is a class on <code>&lt;body&gt;</code>. Each project page
           carries its own: green for the site itself, amber for Knights Counsel, sky for
-          Build-Recipe, gold for PocketProfessors, aqua for FitnessFunctions, lime for the
+          the build-inference study, gold for PocketProfessors, aqua for FitnessFunctions, lime for the
           Contact Manager.
         </li>
       </ul>
       <p>
-        One subtlety worth recording, because it cost me an afternoon: a custom property that
-        references another one resolves <em>where it is declared</em>, not where it is used. Writing
-        <code>--accent-soft: var(--accent)</code> at <code>:root</code> would freeze it to the root
-        accent and silently ignore the per-page theme. Everything derived from
-        <code>--accent</code> therefore has to be declared inside the <code>body.theme-*</code>
-        block, not at <code>:root</code>.
+        Light mode needed more than an inverted background, and it took the longest of anything
+        here to get right. Neon on white is unreadable — the accents sit at roughly 1.3:1 against
+        it — so each theme declares a separate <code>--accent-ink</code>, a darkened version used
+        for text and links that clears WCAG AA, while the bright value stays for glows and borders
+        where contrast does not apply. The site green goes further and becomes a forest green
+        outright: the neon simply does not belong on a light page, and half-measures looked worse
+        than committing to a different colour.
       </p>
       <p>
-        Light mode also needs more than an inverted background. Neon accents sit at roughly 1.3:1
-        against white, so each theme declares a separate <code>--accent-ink</code> — a darkened
-        version used for text and links that clears WCAG AA — while the bright value stays for
-        glows and borders where contrast does not apply.
+        The panels are also more transparent in light mode than in dark, and the page behind them
+        is a shade off white rather than pure white, so the cards read as layers instead of
+        rectangles drawn on a sheet of paper. I did not decide any of that alone — I asked people
+        who actually prefer light mode which versions were easier on their eyes, and went with what
+        they picked rather than what looked good to me at midnight in a dark room. The two modes
+        are meant to be equally finished, not one real design and one accessibility checkbox.
       </p>
 
       <h2>The JavaScript</h2>
       <p>
-        About 120 lines, and the page works without it. It does four things: fills the footer year,
-        toggles colour mode and persists the choice, collapses the nav bar on downward scroll, and
-        drives the email dropdown. The scroll handler is <code>passive</code> and coalesced through
-        <code>requestAnimationFrame</code>; the cursor-glow handler returns early when
-        <code>prefers-reduced-motion</code> matches, so the listener is never attached at all.
+        About 120 lines, and every page works without it. It fills in the footer year, toggles
+        colour mode and remembers the choice, opens the email dropdown, copies the address to the
+        clipboard, expands a project card when you tap it, and flips the coin on a touch screen
+        where there is no hover to trigger it. What it deliberately does not do is render anything
+        — every word on this site is in the HTML, not assembled by a script after the fact.
       </p>
 
-      <h2 id="limits">Limits, and when I would change my mind</h2>
+      <h2 id="limits">Limits</h2>
       <p>
-        Being honest about where this approach stops working is more useful than defending it.
+        Being honest about what my current approach might be lacking.
       </p>
       <ul>
         <li>
-          <strong>The nav bar is duplicated in every file.</strong> Nine copies today. It is the
-          clearest signal that a template layer is coming — at around a dozen pages the editing
-          cost overtakes the cost of a build step, and I would reach for a static site generator
-          rather than a framework.
+          <strong>The nav bar is duplicated in every file.</strong> Nine copies today. 
+          When the amount of pages outway the benefits of hand-written HTML, I will need to switch to a templating system or reorganize the naviagion bar. 
         </li>
         <li>
           <strong>No automated accessibility testing.</strong> The keyboard pass is manual, which
           means it is only as reliable as my memory to run it.
-        </li>
-        <li>
-          <strong>The logo flip is hover-only</strong>, so it does not fire on touch devices. It is
-          decorative and nothing depends on it, but it is a gap.
-        </li>
-        <li>
-          <strong>Four glow effects share one idea.</strong> The cursor halo, the heading glow, the
-          button glow, and the logo halo are variations on the same trick. That is one or two more
-          than the design needs, and restraint would read better than repetition.
         </li>
       </ul>
 

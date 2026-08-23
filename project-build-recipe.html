@@ -2,9 +2,9 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>Build-Recipe Inference — Case Study</title>
+  <title>Mapping How LLMs Build Software — Case Study</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="A containerized LLM agent that infers build recipes for unfamiliar source archives, structured as a cross-tool comparison to separate genuine capability from benchmark fit.">
+  <meta name="description" content="An applicability study measuring where LLM build-recipe inference works and where it fails, across six build systems, and whether difficulty tracks how much each ecosystem declares about its own dependencies.">
   <link rel="canonical" href="https://d4davidg.github.io/project-build-recipe.html">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -39,17 +39,21 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9.4"/><path d="M9.6 9.2a2.5 2.5 0 0 1 4.85.85c0 1.7-2.45 2.55-2.45 2.55"/><path d="M12 16.6h.01"/></svg>
         <span class="navbar-label">Problem</span>
       </a>
-      <a class="navbar-item" href="#design">
+      <a class="navbar-item" href="#approach">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.2" y="3.2" width="17.6" height="17.6" rx="2"/><path d="M3.2 9.4h17.6M9.4 9.4v11.4"/></svg>
-        <span class="navbar-label">Design</span>
+        <span class="navbar-label">Approach</span>
       </a>
-      <a class="navbar-item" href="#constraints">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4.4" y="10.4" width="15.2" height="10.2" rx="2"/><path d="M8 10.4V7.2a4 4 0 0 1 8 0v3.2"/></svg>
-        <span class="navbar-label">Scope</span>
-      </a>
-      <a class="navbar-item" href="#evidence">
+      <a class="navbar-item" href="#hypothesis">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.4 20.6V13M9.1 20.6V8.4M14.8 20.6v-9M20.5 20.6V4.2"/></svg>
-        <span class="navbar-label">Evidence</span>
+        <span class="navbar-label">Hypothesis</span>
+      </a>
+      <a class="navbar-item" href="#prior">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5.4a2 2 0 0 1 2-2h4.6v17.2H6a2 2 0 0 1-2-2Z"/><path d="M20 5.4a2 2 0 0 0-2-2h-4.6v17.2H18a2 2 0 0 0 2-2Z"/></svg>
+        <span class="navbar-label">Prior Work</span>
+      </a>
+      <a class="navbar-item" href="#limits">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4.4" y="10.4" width="15.2" height="10.2" rx="2"/><path d="M8 10.4V7.2a4 4 0 0 1 8 0v3.2"/></svg>
+        <span class="navbar-label">Limits</span>
       </a>
       <a class="navbar-item" href="#status">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9.4"/><path d="M12 6.6V12l3.6 2.2"/></svg>
@@ -65,25 +69,27 @@
   </nav>
 
   <header class="simple glass">
-    <h1 class="neon">Build-Recipe Inference Agent</h1>
+    <h1 class="neon">Mapping How LLMs Build Software</h1>
     <p class="subtitle">
-      Recovering the specification nobody writes down: how to build software you have never seen.
+      An applicability study: where LLM build-recipe inference works, where it fails, and whether
+      the difference tracks how much each ecosystem declares about its own dependencies.
     </p>
   </header>
 
   <main id="main">
     <article>
       <p class="thesis">
-        Software almost never ships with a reliable specification of how to build it. This project
-        treats that missing specification as the artifact worth recovering, and treats the question
-        of <em>where</em> automated recovery works as a measurement problem rather than a
-        scoreboard.
+        A build recipe is the set of things you need to build a project from scratch: the build
+        system, the system and toolchain dependencies, and the phase commands and flags, in order.
+        For a large share of real programs that recipe is not written down anywhere in the source
+        tree. This project measures how much of it an LLM can recover from a cold start, and
+        whether the difficulty of recovering it tracks how much each ecosystem declares.
       </p>
 
       <dl class="facts">
         <div>
           <dt>Type</dt>
-          <dd>Independent research and engineering project</dd>
+          <dd>Independent research project</dd>
         </div>
         <div>
           <dt>Started</dt>
@@ -91,19 +97,19 @@
         </div>
         <div>
           <dt>Status</dt>
-          <dd>Harness in progress; comparison design complete</dd>
+          <dd>Study design settled; harness in progress</dd>
         </div>
         <div>
           <dt>Build systems</dt>
           <dd>Autotools, Make, CMake, Maven, Gradle, Ant</dd>
         </div>
         <div>
-          <dt>Ground truth</dt>
-          <dd>~370 hand-verified build recipes</dd>
+          <dt>Evaluation set</dt>
+          <dd>~240 programs with hand-recorded recipes</dd>
         </div>
         <div>
           <dt>Corpora</dt>
-          <dd>Three, cross-compared</dd>
+          <dd>Apache, GNU, GitHub</dd>
         </div>
       </dl>
 
@@ -117,121 +123,292 @@
 
       <h2 id="problem">The problem</h2>
       <p>
-        The dependency list, the required compiler or JDK version, the exact phase commands and
-        flags — all of it usually lives in the head of whoever last got it working. Engineers lose
-        days getting an unfamiliar codebase to build. Companies cannot reproduce old builds, and
-        legacy projects quietly become unbuildable.
+        Build reproducibility is an integral part of good software engineering but it is often
+        difficult to achieve. Developers spend hours bug fixing and setting up projects, trying to
+        work out whether their build failures are even their own fault in the first place
+        <a href="#ref-huang">[Huang-UnrelatedCI]</a>. The instructions needed to build a project
+        from scratch — which system packages to install, which toolchain version, which commands
+        and in what order — often only exist in a working copy of the project, or in the head of
+        whoever had it running before.
       </p>
       <p>
-        The insight is that the recipe is recoverable, just not by reading. An agent attempts a
-        build in a clean container, reads the failure, adjusts the environment, and retries; the
-        trace of what finally worked <em>is</em> the recipe.
+        I want to be careful about how strong that claim is, because "most software is
+        undocumented" is not something I can support. What I can support is a narrower version,
+        measured on the build-systems dataset assembled in the lab I contributed to: a substantial
+        fraction of the programs that <em>do</em> build require toolchain or dependency choices
+        that are not recoverable from the files alone. The numbers behind that are in
+        <a href="#hypothesis">the hypothesis section</a>.
       </p>
       <p>
-        The concrete case that explains why: a legacy Apache Java project fails to compile because
-        it only works under an older JDK, and nothing in the source tree says so. The only path to
-        that answer is to build it, read the error, and try a different JDK. That loop is the
-        problem, and it is also why filename-based heuristics cannot solve it.
-      </p>
-
-      <h2 id="design">The comparison design</h2>
-      <p>
-        This is the part worth leading with, because it is what separates the project from a
-        single-tool demo. Every existing system in this space reports results on the program set
-        its own authors chose. Running three tools over all three corpora exposes how much of each
-        reported success rate is capability and how much is corpus fit.
-      </p>
-      <p>
-        That is a measurement question, and answering it is the contribution. The deliverable is a
-        map rather than a score — a grid of where builds succeed and fail, broken down by tool,
-        build ecosystem, corpus, recipe field, and failure category.
+        Certain builds depend on information in the environment that the source tree does not have.
+        A legacy Apache Java project can fail with a compilation error because it is only
+        compatible with an older Java version, and nothing in the file tree mentions it. The only
+        way a developer finds out is by building it, reading the error, and trying another Java
+        version. That loop is what this project measures — not as a separate target, but as one
+        failure category inside the scope below.
       </p>
 
-      <h3>The hypothesis the map tests</h3>
+      <h2 id="approach">My approach</h2>
       <p>
-        Inference accuracy should track how <em>declared</em> a field is. A build system is
-        declared by the presence of <code>pom.xml</code> or <code>configure.ac</code>, so it should
-        be inferred nearly perfectly. A required JDK version is often declared nowhere in the
-        source tree and only surfaces as a compile error, so it should be inferred poorly by
-        anything that does not actually attempt the build and read the error.
+        Given a project's source archive, the tool detects the build system, installs system
+        dependencies, chooses a toolchain version, runs the build phases in order, and records the
+        commands and flags needed to reproduce the result. Each recipe is verified by executing it
+        in a fresh isolated container.
       </p>
       <p>
-        Evidence that the hypothesis is worth testing, drawn from hand-labeled build data across
-        roughly 1,000 candidate programs:
+        The design is two stages, and the split is the point. A deterministic script serves as the
+        baseline, because that is what is most comparable to prior work
+        <a href="#ref-agentless">[Agentless]</a>. Where the script falls short is that it can only
+        look up and reproduce recipes that already exist in the project files. From that point the
+        LLM infers the build system, toolchain version, phase commands and flags by attempting the
+        build and resolving its failures.
+      </p>
+
+      <div class="decision">
+        <h3>Stage A — deterministic baseline</h3>
+        <p>
+          Detect the build system by marker files, install the recorded system dependencies, run
+          the default phase commands in a fresh container, and record success or failure per
+          program. No model involved.
+        </p>
+      </div>
+
+      <div class="decision">
+        <h3>Stage B — LLM acting on failures</h3>
+        <p>
+          For each program the baseline cannot build, the model receives a summary of the source
+          tree and the failure log from Stage A, and proposes a corrected recipe: flags, toolchain
+          version, packages, or a fixed command. The system reruns in a fresh container and records
+          whether it builds.
+        </p>
+      </div>
+
+      <h3>What the output actually is</h3>
+      <p>
+        This is the part I had wrong in an earlier draft. I was describing the output as
+        "documentation", which is not something I can evaluate — there is no way to score whether a
+        document lets someone "understand" a build. The output is a <strong>build recipe</strong>,
+        as labelled fields, and it is scored two ways: does it build in a fresh container, and how
+        does each field compare to the recipe a human recorded by hand for the same program.
+      </p>
+      <p>
+        A working Dockerfile is a replicable recipe, and I do not want to claim otherwise. The
+        difference is that a Dockerfile collapses everything into one artifact. Separating the
+        build system, system dependencies, toolchain version and per-phase commands into named
+        fields is what makes per-component scoring possible — build system classification accuracy,
+        dependency precision and recall, toolchain version match, and per-phase outcomes, rather
+        than a single build-succeeded bit.
+      </p>
+      <p>
+        The output format the harness is being built to produce, on an illustrative program:
+      </p>
+      <pre><code>{
+  "name": "accumulo",
+  "corpus": "Apache",
+  "detected_build_system": "Maven",
+  "apt_dependencies": ["maven", "openjdk-17-jdk"],
+  "tool_versions": { "java": "openjdk 17.0.13", "maven": "3.8.7" },
+  "commands": {
+    "bootstrap": "mvn process-resources",
+    "configure": null,
+    "compile":   "mvn process-classes",
+    "test":      "mvn test"
+  },
+  "resolution": {
+    "solved_by": "llm",
+    "baseline_result": "fail_at_compile",
+    "attempts": [
+      { "stage": "A", "toolchain": {"java": "openjdk-21-jdk"},
+        "failed_phase": "compile",
+        "error_signature": "warnings found and -Werror specified" },
+      { "stage": "B", "fix": {"field": "toolchain.java", "to": "openjdk-17-jdk"},
+        "rationale": "JDK 21 errors on deprecated-for-removal API; targets JDK 17",
+        "result": "success" }
+    ]
+  },
+  "ground_truth_match": {
+    "build_system": true,
+    "apt_dependencies": { "precision": 1.0, "recall": 1.0 },
+    "toolchain_java": true
+  }
+}</code></pre>
+
+      <h2 id="hypothesis">The hypothesis this maps</h2>
+      <p>
+        Porting a technique from one ecosystem to another is engineering, not research, unless
+        there is something about the other ecosystems that makes the problem intrinsically
+        different. I think there is, and it is the hypothesis the study is built around:
+      </p>
+      <p class="thesis">
+        Cold-start inference degrades predictably with how much dependency information an ecosystem
+        declares. Maven and Gradle declare their dependencies, so a model can read them. Autotools
+        and Make declare almost nothing, so dependencies only surface as configure or compile
+        errors. Inference should be structurally easier where dependencies are stated and harder
+        where they are latent — and the contribution is mapping that gradient and explaining why.
+      </p>
+      <p>
+        That also predicts <em>which</em> fields are easy. A build system is declared by the
+        presence of <code>pom.xml</code> or <code>configure.ac</code>, so it should be classified
+        nearly perfectly. A required JDK version is often declared nowhere and only surfaces as a
+        compile error, so it should be recovered poorly by anything that does not actually attempt
+        the build and read the error.
+      </p>
+      <p>
+        The evidence that the non-scriptable part of this process is large, drawn from the lab
+        dataset:
       </p>
       <ul>
-        <li>92 of 161 projects with a recorded Java version need JDK 8, 11, or 17 rather than the default JDK 21, and nothing in the file tree says so.</li>
+        <li>
+          Of the 161 Apache projects with a recorded required Java version, 92 require JDK 8, 11
+          or 17 instead of the default JDK 21 (JDK 8: 57, JDK 11: 17, JDK 17: 18).
+        </li>
         <li>103 programs where the default build commands fail outright.</li>
-        <li>25 projects where a plain <code>mvn verify</code> does not succeed and module exclusions or flags are required.</li>
-        <li>19 programs that will not compile under the default compiler flags.</li>
-        <li>Configure invocations that depend on non-obvious compatibility flags such as <code>CFLAGS+=-fcommon</code> or <code>FORCE_UNSAFE_CONFIGURE=1</code>.</li>
+        <li>19 programs that do not compile under the default <code>gcc</code>/<code>g++</code> flags.</li>
+        <li>25 of the included Apache projects do not succeed with just <code>mvn verify</code>.</li>
+        <li>
+          Configure invocations that depend on less obvious compatibility flags such as
+          <code>CFLAGS+=-fcommon ./configure</code> and
+          <code>FORCE_UNSAFE_CONFIGURE=1 ./configure</code>.
+        </li>
       </ul>
       <p>
-        None of that is recoverable from filenames. All of it is recoverable by building, failing,
-        and reading the error.
+        None of these corrections are recoverable from filenames alone, and none would survive
+        being collapsed into a single Dockerfile.
       </p>
 
-      <h2 id="constraints">Scope and limits</h2>
+      <h2 id="prior">Prior work, and what I am measured against</h2>
       <p>
-        Stating the limit before being asked is the point, so here it is up front.
+        Repo2Run builds executable Docker environments for Python repositories, reporting an 86%
+        success rate on 420 repositories <a href="#ref-repo2run">[Repo2Run]</a>. CXXCrafter targets
+        C and C++ projects specifically and reports a 78% build success rate
+        <a href="#ref-cxxcrafter">[CXXCrafter]</a>. These are the two systems closest to mine, and
+        the comparison design runs my tool and theirs over each other's program sets — mine over
+        their corpora, theirs over the apt-installable subset — so that a reported success rate can
+        be read against a corpus other than the one its own authors chose.
+      </p>
+      <p>
+        Lyu et al. is the nearest work overall: an LLM generates a working Dockerfile by
+        iteratively patching until the project builds, then optimises image size
+        <a href="#ref-lyu-dockerfile">[Lyu-Dockerfile]</a>. Related work from the same authors
+        fixes missing dependency declarations in existing build files
+        <a href="#ref-lyu-mdfixer">[Lyu-MDfixer]</a>, and Rosa et al. trained a transformer to
+        generate Dockerfiles from natural-language requirement specifications
+        <a href="#ref-rosa">[Rosa]</a>. Three differences keep this project distinct:
       </p>
       <ul>
         <li>
-          <strong>Deliberately scoped</strong> to programs whose dependencies are installable
-          through the system package manager. That excludes projects needing pip, npm, cargo,
-          specific hardware, or unpackaged legacy versions — roughly 141 of the 1,000 candidate
-          programs.
+          <strong>Scale and distribution.</strong> They evaluate on 35 projects across five
+          languages at roughly 80% build success. The apt-installable subset here is around 240
+          programs, with 109 Maven and 184 Autotools/Make.
         </li>
         <li>
-          <strong>Two of the six build systems have very few examples</strong> in the corpus, so
-          those results will be suggestive rather than statistically solid.
+          <strong>What is measured.</strong> They measure buildability, image size and build time.
+          I measure the inferred recipe against a human-recorded one, per component.
+        </li>
+        <li>
+          <strong>What the model is given.</strong> Working from the raw source tree rather than
+          from a README or other natural-language artifact is a further difference — one I still
+          need to confirm against their full paper rather than the abstract.
+        </li>
+      </ul>
+      <p>
+        GradleFixer repairs Android Gradle build failures through domain-specific tools instead of
+        a general-purpose shell, reporting an 81.4% resolve rate on AndroidBuildBench and
+        outperforming a shell-based agent <a href="#ref-gradlefixer">[GradleFixer]</a>. That is
+        where the tool-wrapping part of this design comes from, and testing whether it holds across
+        more than a single ecosystem is one of the research questions.
+      </p>
+      <p>
+        Two more shape the design without being direct comparisons. Agentless implements a fixed
+        localization–repair–validation pipeline and stays competitive with more complex agents on
+        SWE-bench Lite <a href="#ref-agentless">[Agentless]</a>; that is the logic the deterministic
+        baseline follows. ESAA keeps an append-only log of validated intents for auditability and
+        deterministic replay <a href="#ref-esaa">[ESAA]</a>, which is what inspired the recorder
+        here. EChecker <a href="#ref-echecker">[EChecker]</a> and Breaking-Good
+        <a href="#ref-breakinggood">[Breaking-Good]</a> detect and explain build problems without
+        repairing the environment; they are adjacent rather than competing, and I no longer lean on
+        them to make the case for this project.
+      </p>
+      <p>
+        The work that started this is Foreman <a href="#ref-foreman">[Foreman]</a>, which models
+        per-phase file and behaviour permissions to harden build systems against pipeline
+        poisoning. Its specifications are currently hand-written and automated specification
+        inference is listed as future work. A successful build trace from this project could help
+        draft those specifications, but that is a stretch goal and out of scope for now.
+      </p>
+
+      <h2 id="questions">Research questions</h2>
+      <ul>
+        <li>
+          <strong>RQ1.</strong> Given only a source archive, how effectively can an LLM infer a
+          build recipe that produces a successful build in an isolated container, and how does that
+          vary across ecosystems and corpora?
+        </li>
+        <li>
+          <strong>RQ2.</strong> Measured on success rate, robustness and LLM-call cost, does
+          letting the model retry on failure outperform a single repair attempt, or does the
+          deterministic baseline accomplish this alone?
+        </li>
+        <li>
+          <strong>RQ3.</strong> Does constraining the model to domain-specific tool wrappers,
+          instead of raw shell access, improve build success and reduce invalid or unsafe actions —
+          and does that hold beyond GradleFixer's single Android/Gradle setting?
+        </li>
+        <li>
+          <strong>RQ4.</strong> For programs neither the baseline nor the model can build, which
+          failure categories are reachable with more attempts or different toolchain choices, and
+          which are genuinely out of scope?
+        </li>
+      </ul>
+
+      <h2 id="limits">Limitations</h2>
+      <p>
+        Stating the limits before being asked is the point, so here they are up front.
+      </p>
+      <ul>
+        <li>
+          <strong>The evaluation set only includes apt-installable programs</strong>, which removes
+          the harder dependency cases. Programs needing pip, npm or cargo, specific hardware, or a
+          legacy version that is no longer packaged are out of bounds — 141 of the 1002 programs in
+          the dataset are excluded on those grounds. Within this scope the study can still measure
+          detection accuracy, toolchain version selection, phase command correctness, and recovery
+          through flag and version changes.
+        </li>
+        <li>
+          <strong>The build systems are heavily skewed.</strong> Of the 368 programs that build
+          successfully with full recorded recipes: Autotools and Make (184), Maven (109), CMake
+          (36), Make (29), Gradle (6), Ant (4). Gradle and Ant results should be read as suggestive
+          rather than statistically solid.
+        </li>
+        <li>
+          <strong>The human baseline was produced by humans.</strong> It is subject to human error,
+          and the recorded recipes are not guaranteed to be the only correct ones, or the most
+          efficient ones.
         </li>
         <li>
           <strong>The cross-tool comparison depends on the other systems being runnable.</strong>
-          One is confirmed public; the other's artifacts are not yet confirmed available. Until
-          both are verified this remains a comparison <em>design</em>, not a completed result.
+          Until their artifacts are confirmed available this remains a comparison <em>design</em>,
+          not a completed result.
         </li>
         <li>
-          <strong>The ground-truth corpus is one I contributed to</strong>, not one I built alone.
+          <strong>The ground-truth dataset is one I contributed to</strong>, not one I built alone.
           It came out of lab work with multiple contributors.
-        </li>
-      </ul>
-
-      <h2 id="evidence">How the pass criterion is defined</h2>
-      <p>
-        The criterion was fixed before anything ran: the inferred recipe, executed in a clean
-        container, produces a successful build. Every attempt runs in a fresh container with state
-        reset. Results are scored against recipes a human already recorded by hand for the same
-        programs.
-      </p>
-      <p>
-        Two design choices follow from treating this as evaluation work rather than tool-building:
-      </p>
-      <ul>
-        <li>
-          <strong>Constrained action space.</strong> The agent gets domain-specific tool wrappers
-          rather than raw shell access, with an ablation designed to measure the effect on success
-          rate and on invalid actions.
-        </li>
-        <li>
-          <strong>Append-only event logging</strong> for deterministic replay, plus per-run cost
-          and token accounting, so a result can be re-examined rather than only re-run.
         </li>
       </ul>
 
       <h2 id="status">Status</h2>
       <p class="callout">
-        <strong>Environment and harness in progress; comparison design complete, results pending.</strong>
+        <strong>Study design settled; environment and harness in progress; results pending.</strong>
         Splitting what is designed from what is running is deliberate — it is the same honesty that
         makes the evaluation argument credible in the first place.
       </p>
 
-      <h3>Done and defensible now</h3>
+      <h3>Settled now</h3>
       <ul>
-        <li>Environment and repository setup.</li>
+        <li>Environment and repository setup: Windows 11 host on WSL2 with Ubuntu 24.04, Docker driven from Python through the Docker SDK, and the dataset subset stored as JSON.</li>
         <li>Six build systems worked with directly, hands-on.</li>
         <li>Build-failure diagnosis and failure-category construction.</li>
-        <li>Study design, metric definition, and the cross-tool comparison design.</li>
+        <li>Study design, metric definition, and the two-stage evaluation plan.</li>
         <li>Literature synthesis across the existing systems in this space.</li>
       </ul>
 
@@ -239,19 +416,117 @@
       <ul>
         <li>The containerized executor and build-system detection.</li>
         <li>The LLM inference call and failure-recovery loop with attempt budgets.</li>
-        <li>Per-ecosystem results, ablation results, and the finished map.</li>
+        <li>Per-ecosystem results, the tool-wrapper ablation, and the finished map.</li>
       </ul>
 
-      <h2>What I would do differently</h2>
+      <h3>Still open</h3>
       <ul>
-        <li>
-          Verify the availability of the external systems' artifacts before designing the
-          comparison around them. The design is sound, but one leg of it is still contingent on
-          something outside my control.
+        <li>Whether Lyu et al. rely on a README or other natural-language artifact when generating a Dockerfile, or work from the raw repository as this project does.</li>
+        <li>Whether to include a smaller, harder non-apt subset now, so that the dependency boundary is visible rather than assumed.</li>
+        <li>Whether a multi-iteration loop with pass@k and robustness curves is worth building, or whether it only earns its keep if the single attempt shows promise first.</li>
+      </ul>
+
+      <h2 id="review">What changed after review</h2>
+      <p>
+        An earlier version of this proposal led with documentation and information loss. That
+        framing did not survive review, and the objections were the right ones:
+      </p>
+      <div class="decision">
+        <h3>Documentation → build recipe</h3>
+        <p>
+          Documentation is hard to evaluate; there is no defensible way to score whether a document
+          lets someone understand a build. The output is now a recipe with labelled fields, scored
+          on execution in a fresh container and on per-field agreement with the human record.
+        </p>
+        <p class="decision-rejected">
+          <strong>Rejected:</strong> evaluating comprehension or documentation quality.
+        </p>
+      </div>
+      <div class="decision">
+        <h3>Multi-ecosystem coverage → the declaration gradient</h3>
+        <p>
+          "It works on more ecosystems" is porting, not a research contribution. The contribution
+          is the claim that inference difficulty is structurally tied to how much an ecosystem
+          declares, and a map that shows where that holds.
+        </p>
+        <p class="decision-rejected">
+          <strong>Rejected:</strong> breadth of ecosystem coverage as the headline claim.
+        </p>
+      </div>
+      <div class="decision">
+        <h3>An unsupported premise → dataset numbers</h3>
+        <p>
+          "Most software lacks appropriate documentation" was asserted without evidence. It is now
+          a narrower, measured claim about the programs in the dataset, with the counts stated
+          above.
+        </p>
+        <p class="decision-rejected">
+          <strong>Rejected:</strong> the broad claim about software in general.
+        </p>
+      </div>
+
+      <h2 id="references">References</h2>
+      <ul class="refs">
+        <li id="ref-agentless">
+          [Agentless] Chunqiu Steven Xia, Yinlin Deng, Soren Dunn, Lingming Zhang.
+          "Agentless: Demystifying LLM-based Software Engineering Agents."
+          <a href="https://arxiv.org/abs/2407.01489" target="_blank" rel="noopener">arXiv:2407.01489</a>, 2024.
         </li>
-        <li>
-          Sample the corpus for build-system balance earlier. Two ecosystems ended up thin enough
-          that their cells in the map will carry a caveat rather than a finding.
+        <li id="ref-gradlefixer">
+          [GradleFixer] Ha Min Son, Huan Ren, Xin Liu, Zhe Zhao.
+          "Automating Android Build Repair: Bridging the Reasoning-Execution Gap in LLM Agents with Domain-Specific Tools."
+          <a href="https://arxiv.org/abs/2510.08640" target="_blank" rel="noopener">arXiv:2510.08640</a>, 2025.
+        </li>
+        <li id="ref-lyu-dockerfile">
+          [Lyu-Dockerfile] Jun Lyu, He Zhang, Yusong Yuan, Lanxin Yang, Yue Li, Manuel Rigger.
+          "Automatic Dockerfile Generation with Large Language Models." ICSE 2026.
+        </li>
+        <li id="ref-lyu-mdfixer">
+          [Lyu-MDfixer] Jun Lyu, He Zhang, Lanxin Yang, Yue Li, Chenxing Zhong, Manuel Rigger.
+          "Automatic Fixing of Missing Dependency Errors." ASE 2025.
+          <a href="https://doi.org/10.1109/ASE63991.2025.00056" target="_blank" rel="noopener">DOI:10.1109/ASE63991.2025.00056</a>.
+        </li>
+        <li id="ref-echecker">
+          [EChecker] Jun Lyu, Shanshan Li, He Zhang, Yang Zhang, Guoping Rong, Manuel Rigger.
+          "Detecting Build Dependency Errors in Incremental Builds." ISSTA 2024.
+          <a href="https://doi.org/10.1145/3650212.3652105" target="_blank" rel="noopener">DOI:10.1145/3650212.3652105</a>.
+          Also <a href="https://arxiv.org/abs/2404.13295" target="_blank" rel="noopener">arXiv:2404.13295</a>.
+        </li>
+        <li id="ref-breakinggood">
+          [Breaking-Good] Frank Reyes, Benoit Baudry, Martin Monperrus.
+          "Breaking-Good: Explaining Breaking Dependency Updates with Build Analysis." SCAM 2024, pp. 36–46.
+          <a href="https://doi.org/10.1109/SCAM63643.2024.00014" target="_blank" rel="noopener">DOI:10.1109/SCAM63643.2024.00014</a>.
+          Also <a href="https://arxiv.org/abs/2407.03880" target="_blank" rel="noopener">arXiv:2407.03880</a>.
+        </li>
+        <li id="ref-rosa">
+          [Rosa] Giovanni Rosa, Antonio Mastropaolo, Simone Scalabrino, Gabriele Bavota, Rocco Oliveto.
+          "Automatically Generating Dockerfiles via Deep Learning: Challenges and Promises." ICSSP 2023, pp. 1–12.
+          <a href="https://doi.org/10.1109/ICSSP59042.2023.00011" target="_blank" rel="noopener">DOI:10.1109/ICSSP59042.2023.00011</a>.
+          Also <a href="https://arxiv.org/abs/2303.15990" target="_blank" rel="noopener">arXiv:2303.15990</a>.
+        </li>
+        <li id="ref-repo2run">
+          [Repo2Run] Ruida Hu, Chao Peng, Xinchen Wang, Junjielong Xu, Cuiyun Gao.
+          "Repo2Run: Automated Building Executable Environment for Code Repository at Scale." NeurIPS 2025.
+          Also <a href="https://arxiv.org/abs/2502.13681" target="_blank" rel="noopener">arXiv:2502.13681</a>.
+        </li>
+        <li id="ref-cxxcrafter">
+          [CXXCrafter] Zhengmin Yu, Yuan Zhang, Ming Wen, Yinan Nie, Wenhui Zhang, Min Yang.
+          "CXXCrafter: An LLM-Based Agent for Automated C/C++ Open Source Software Building."
+          Proc. ACM Softw. Eng. 2 (FSE), pp. 2618–2640, 2025.
+          <a href="https://doi.org/10.1145/3729386" target="_blank" rel="noopener">DOI:10.1145/3729386</a>.
+        </li>
+        <li id="ref-esaa">
+          [ESAA] Elzo Brito dos Santos Filho.
+          "ESAA: Event Sourcing for Autonomous Agents in LLM-Based Software Engineering." arXiv:2602.23193, 2026.
+        </li>
+        <li id="ref-foreman">
+          [Foreman] Brent Pappas, Paul Gazzillo.
+          "Build Code is Still Code: Finding the Antidote for Pipeline Poisoning." ICSE 2026. Also arXiv:2601.08995.
+        </li>
+        <li id="ref-huang">
+          [Huang-UnrelatedCI] Andie Huang, Daniel Alencar da Costa, Grant Dick, Mariam El Mezouar.
+          "Is this Build Failure Related to my Patch? An Empirical Study of Unrelated Build Failures in Continuous Integration."
+          arXiv:2605.05564, 2026.
         </li>
       </ul>
 
