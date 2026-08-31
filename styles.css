@@ -1283,6 +1283,27 @@ footer{
   color: var(--text-2);
 }
 
+/* ---- Lead project ----
+   Knights Counsel sits above the grid as a full-width slab rather than in it:
+   it is the largest piece of work on the page and a one-third column does not
+   carry it. Behaviour is identical to the cards below — same hover disclosure,
+   same tap toggle — it just has more room to open into. */
+.work-card-lead{
+  margin-top: .9rem;
+}
+
+.work-card-lead h3{
+  font-size: clamp(1.35rem, 2.6vw, 1.75rem);
+}
+
+.work-card-lead .card-meta{ font-size: .88rem; }
+
+/* Wide enough that the summary can run at a comfortable measure instead of
+   spanning the whole slab. */
+@media (min-width: 900px){
+  .work-card-lead .card-body{ max-width: 80ch; }
+}
+
 /* ---- Body disclosure ----
    The summary is hidden until you hover, focus inside, or tap the card, so a
    reader scanning the list sees six titles rather than six paragraphs.

@@ -71,7 +71,7 @@
   <header class="simple glass">
     <h1 class="neon">Mapping How LLMs Build Software</h1>
     <p class="subtitle">
-      An applicability study: where LLM build-recipe inference works, where it fails, and whether
+      An applicability study: where large language model (LLM) build-recipe inference works, where it fails, and whether
       the difference tracks how much each ecosystem declares about its own dependencies.
     </p>
   </header>
@@ -249,7 +249,7 @@
       <p>
         That also predicts <em>which</em> fields are easy. A build system is declared by the
         presence of <code>pom.xml</code> or <code>configure.ac</code>, so it should be classified
-        nearly perfectly. A required JDK version is often declared nowhere and only surfaces as a
+        nearly perfectly. A required Java Development Kit (JDK) version is often declared nowhere and only surfaces as a
         compile error, so it should be recovered poorly by anything that does not actually attempt
         the build and read the error.
       </p>
@@ -405,7 +405,7 @@
 
       <h3>Settled now</h3>
       <ul>
-        <li>Environment and repository setup: Windows 11 host on WSL2 with Ubuntu 24.04, Docker driven from Python through the Docker SDK, and the dataset subset stored as JSON.</li>
+        <li>Environment and repository setup: Windows 11 host on Windows Subsystem for Linux 2 (WSL2) with Ubuntu 24.04, Docker driven from Python through the Docker software development kit (SDK), and the dataset subset stored as JavaScript Object Notation (JSON).</li>
         <li>Six build systems worked with directly, hands-on.</li>
         <li>Build-failure diagnosis and failure-category construction.</li>
         <li>Study design, metric definition, and the two-stage evaluation plan.</li>

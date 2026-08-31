@@ -105,16 +105,16 @@
       <h2 id="role">My Role — Project Manager</h2>
       <ul>
         <li><strong>Planning & scope:</strong> defined functional requirements, split milestones (search → add/edit → delete → polish), tracked progress using a Gantt chart.</li>
-        <li><strong>Coordination:</strong> scheduled group meetings, tracked members, assigned issues/PRs, and enforced code-review checklists.</li>
+        <li><strong>Coordination:</strong> scheduled group meetings, tracked members, assigned issues/pull requests (PRs), and enforced code-review checklists.</li>
         <li><strong>Architecture & handoffs:</strong> finalized endpoint contracts (<code>search.php</code>, <code>add.php</code>, <code>update.php</code>, <code>delete.php</code>) and payload shapes.</li>
-        <li><strong>Quality:</strong> validated forms (HTML constraints + JS), accessibility passes (labels, focus order, ARIA), and browser checks.</li>
-        <li><strong>DevOps:</strong> coordinated hosting and transfers (GoDaddy/DigitalOcean), SFTP/SSH (FileZilla, PuTTY), and environment setup documentation.</li>
+        <li><strong>Quality:</strong> validated forms (HTML constraints + JS), accessibility passes covering labels, focus order, and ARIA (Accessible Rich Internet Applications) attributes, and browser checks.</li>
+        <li><strong>DevOps:</strong> coordinated hosting and transfers (GoDaddy/DigitalOcean), secure file transfer protocol (SFTP)/secure shell (SSH) (FileZilla, PuTTY), and environment setup documentation.</li>
       </ul>
 
       <h2 id="features">Features</h2>
       <ul>
         <li><strong>Live search:</strong> debounced input calls <code>search.php</code> and renders results dynamically.</li>
-        <li><strong>CRUD:</strong> create/update/delete via PHP endpoints with optimistic UI and error fallback.</li>
+        <li><strong>CRUD (create, read, update, delete):</strong> create/update/delete via PHP endpoints with optimistic user interface (UI) and error fallback.</li>
         <li><strong>Validation:</strong> native HTML constraints (<code>required</code>, <code>type="email"</code>, <code>pattern</code>) plus JS error messaging.</li>
         <li><strong>Responsive design:</strong> form/table layouts adapt cleanly from mobile to desktop.</li>
         <li><strong>Accessible UI:</strong> proper labels/ids, descriptive buttons, visible focus states, logical tab order.</li>
@@ -122,8 +122,8 @@
 
       <h2 id="architecture">Architecture</h2>
       <ul>
-        <li><strong>Front-end:</strong> Semantic HTML sections, CSS (flex/grid), unobtrusive JS for DOM updates.</li>
-        <li><strong>Transport:</strong> <code>XMLHttpRequest</code> with JSON payloads/responses; centralized request helpers.</li>
+        <li><strong>Front-end:</strong> Semantic HTML sections, CSS (flex/grid), unobtrusive JS for Document Object Model (DOM) updates.</li>
+        <li><strong>Transport:</strong> <code>XMLHttpRequest</code> with JavaScript Object Notation (JSON) payloads/responses; centralized request helpers.</li>
         <li><strong>Backend:</strong> PHP scripts returning JSON (<code>search.php</code>, <code>add.php</code>, <code>update.php</code>, <code>delete.php</code>).</li>
         <li><strong>Data:</strong> MySQL schema for contacts (name, email, phone, etc.), parameterized queries.</li>
       </ul>
@@ -131,14 +131,14 @@
       <h2 id="contributions">Technical Contributions</h2>
       <ul>
         <li>Implemented the delete flow and fixed a null-DOM reference bug by guarding queries and deferring lookups until content mount.</li>
-        <li>Wrote XHR utilities for GET/POST, standardized success/error handling, and added status toasts.</li>
+        <li>Wrote XMLHttpRequest (XHR) utilities for GET/POST, standardized success/error handling, and added status toasts.</li>
         <li>Authored the form accessibility pattern (labels, error regions, focus management) and responsive form grid.</li>
       </ul>
 
       <h2 id="lessons">Challenges & Lessons</h2>
       <ul>
         <li><strong>Race conditions:</strong> solved null element references with safe selectors and render timing.</li>
-        <li><strong>Validation UX:</strong> combined native constraints with concise custom messages for clarity and screen-reader compatibility.</li>
+        <li><strong>Validation user experience (UX):</strong> combined native constraints with concise custom messages for clarity and screen-reader compatibility.</li>
         <li><strong>Separation of concerns:</strong> kept HTML semantic, CSS for layout/visuals, and JS for behavior to simplify maintenance.</li>
         <li><strong>Collaboration:</strong> Learned to manage a team, delegate tasks, and enforce quality through reviews and checklists.</li>
       </ul>
@@ -147,7 +147,7 @@
       <ul>
         <li>Project management (scope, milestones, issue/PR workflow, stand-ups)</li>
         <li>Semantic HTML & accessible forms (labels, aria-live, focus order)</li>
-        <li>AJAX with <code>XMLHttpRequest</code> to PHP endpoints</li>
+        <li>Asynchronous JavaScript and XML (AJAX) with <code>XMLHttpRequest</code> to PHP endpoints</li>
         <li>Responsive CSS with flex/grid</li>
         <li>Basic DevOps (GoDaddy/DigitalOcean, FileZilla, PuTTY)</li>
       </ul>
