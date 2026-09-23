@@ -172,33 +172,107 @@ body.theme-lime {
   --border: color-mix(in srgb, var(--accent) 12%, transparent);
 }
 
-/* ---- Light mode: the site green becomes forest green ----
-   Neon on white is unreadable and looks nothing like the dark theme's intent.
-   The whole green ramp is restated here — fill, glows and ink — so the nav bar,
-   the rules and every halo shift together. White lettering on the fill, because
-   black only manages 3.9:1 against it. */
+/* SimpleBank — red. */
+body.theme-red {
+  --on-accent: #000;
+  --accent: #ff4d4d;
+  --accent-soft: rgba(255,77,77,.55);
+  --accent-faint: rgba(255,77,77,.25);
+  --accent-ink: var(--accent);
+  --border: color-mix(in srgb, var(--accent) 12%, transparent);
+}
+
+/* ============================ Light mode: every accent darkens =============
+   Neon on white is unreadable and looks nothing like the dark theme's intent,
+   so each accent is RE-CHOSEN for light mode rather than lightened — the same
+   move the site green makes from neon to forest. The whole ramp is restated —
+   fill, glows and ink — so the nav bar, the rules, the filled buttons and every
+   halo shift together instead of drifting apart.
+
+   Two values per theme, and the split is load-bearing:
+     --accent      the FILL. White lettering sits on it, so it is measured
+                   white-on-fill.
+     --accent-ink  the same colour used as TEXT on the page, so it is measured
+                   against the page background (#e4e9e4, not pure white — the
+                   difference is what made one of these fail).
+
+   Every ratio below was computed, not eyeballed, and all clear WCAG AA (4.5:1).
+========================================================================== */
 :root[data-mode="light"] body.theme-green,
 :root[data-mode="light"] .accent-green{
-  --accent: #1f7a3a;
+  --accent: #1f7a3a;                      /* white on fill 5.38:1 */
   --accent-soft: rgba(31,122,58,.55);
   --accent-faint: rgba(31,122,58,.22);
   --on-accent: #fff;
 }
 
-/* Readable ink + a stronger border once the page goes light. */
-:root[data-mode="light"] body.theme-green    { --accent-ink: #14602c; }
-:root[data-mode="light"] body.theme-aqua     { --accent-ink: #0b6f75; }
-:root[data-mode="light"] body.theme-gold     { --accent-ink: #7a5600; }
-:root[data-mode="light"] body.theme-amber    { --accent-ink: #9c5200; }
-:root[data-mode="light"] body.theme-sky      { --accent-ink: #1257c9; }
-:root[data-mode="light"] body.theme-lime     { --accent-ink: #4a7c0f; }
+:root[data-mode="light"] body.theme-aqua,
+:root[data-mode="light"] .accent-aqua{
+  --accent: #0c757c;                      /* white on fill 5.45:1 */
+  --accent-soft: rgba(12,117,124,.55);
+  --accent-faint: rgba(12,117,124,.22);
+  --on-accent: #fff;
+}
+
+:root[data-mode="light"] body.theme-gold,
+:root[data-mode="light"] .accent-gold{
+  --accent: #8a6100;                      /* white on fill 5.54:1 */
+  --accent-soft: rgba(138,97,0,.55);
+  --accent-faint: rgba(138,97,0,.22);
+  --on-accent: #fff;
+}
+
+:root[data-mode="light"] body.theme-amber,
+:root[data-mode="light"] .accent-amber{
+  --accent: #ad5b00;                      /* white on fill 4.91:1 */
+  --accent-soft: rgba(173,91,0,.55);
+  --accent-faint: rgba(173,91,0,.22);
+  --on-accent: #fff;
+}
+
+:root[data-mode="light"] body.theme-sky,
+:root[data-mode="light"] .accent-sky{
+  --accent: #1a63d6;                      /* white on fill 5.53:1 */
+  --accent-soft: rgba(26,99,214,.55);
+  --accent-faint: rgba(26,99,214,.22);
+  --on-accent: #fff;
+}
+
+:root[data-mode="light"] body.theme-lime,
+:root[data-mode="light"] .accent-lime{
+  --accent: #47760f;                      /* white on fill 5.43:1 */
+  --accent-soft: rgba(71,118,15,.55);
+  --accent-faint: rgba(71,118,15,.22);
+  --on-accent: #fff;
+}
+
+:root[data-mode="light"] body.theme-red,
+:root[data-mode="light"] .accent-red{
+  --accent: #b3261e;                      /* white on fill 6.54:1 */
+  --accent-soft: rgba(179,38,30,.55);
+  --accent-faint: rgba(179,38,30,.22);
+  --on-accent: #fff;
+}
+
+/* Ink: the accent used as TEXT, measured against the page background.
+   Lime was #4a7c0f and measured 4.08:1 there — it read fine against pure white
+   and failed against the slightly darker page, which is why these are checked
+   against the real background rather than an assumed one. */
+:root[data-mode="light"] body.theme-green,  :root[data-mode="light"] .accent-green  { --accent-ink: #14602c; }  /* 6.23:1 */
+:root[data-mode="light"] body.theme-aqua,   :root[data-mode="light"] .accent-aqua   { --accent-ink: #0b6f75; }  /* 4.82:1 */
+:root[data-mode="light"] body.theme-gold,   :root[data-mode="light"] .accent-gold   { --accent-ink: #7a5600; }  /* 5.41:1 */
+:root[data-mode="light"] body.theme-amber,  :root[data-mode="light"] .accent-amber  { --accent-ink: #9c5200; }  /* 4.72:1 */
+:root[data-mode="light"] body.theme-sky,    :root[data-mode="light"] .accent-sky    { --accent-ink: #1257c9; }  /* 5.28:1 */
+:root[data-mode="light"] body.theme-lime,   :root[data-mode="light"] .accent-lime   { --accent-ink: #426a0d; }  /* 5.18:1 */
+:root[data-mode="light"] body.theme-red,    :root[data-mode="light"] .accent-red    { --accent-ink: #a3201c; }  /* 6.14:1 */
 
 :root[data-mode="light"] body.theme-green,
 :root[data-mode="light"] body.theme-aqua,
 :root[data-mode="light"] body.theme-gold,
 :root[data-mode="light"] body.theme-amber,
 :root[data-mode="light"] body.theme-sky,
-:root[data-mode="light"] body.theme-lime {
+:root[data-mode="light"] body.theme-lime,
+:root[data-mode="light"] body.theme-red {
   --border: color-mix(in srgb, var(--accent-ink) 30%, transparent);
 }
 
@@ -215,6 +289,7 @@ body.theme-lime {
 .accent-gold   { --on-accent: #000; --accent: #ffd54a; --accent-soft: rgba(255,213,74,.55);  --accent-faint: rgba(255,213,74,.25);  --accent-ink: var(--accent); --border: color-mix(in srgb, var(--accent) 12%, transparent); }
 .accent-amber    { --on-accent: #000; --accent: #ff9d2e; --accent-soft: rgba(255,157,46,.55); --accent-faint: rgba(255,157,46,.25);  --accent-ink: var(--accent); --border: color-mix(in srgb, var(--accent) 12%, transparent); }
 .accent-sky      { --on-accent: #000; --accent: #5fb0ff; --accent-soft: rgba(95,176,255,.55); --accent-faint: rgba(95,176,255,.25);  --accent-ink: var(--accent); --border: color-mix(in srgb, var(--accent) 12%, transparent); }
+.accent-red      { --on-accent: #000; --accent: #ff4d4d; --accent-soft: rgba(255,77,77,.55);   --accent-faint: rgba(255,77,77,.25);   --accent-ink: var(--accent); --border: color-mix(in srgb, var(--accent) 12%, transparent); }
 .accent-lime     { --on-accent: #000; --accent: #a3e635; --accent-soft: rgba(163,230,53,.55);  --accent-faint: rgba(163,230,53,.25);  --accent-ink: var(--accent); --border: color-mix(in srgb, var(--accent) 12%, transparent); }
 
 :root[data-mode="light"] .accent-green    { --accent-ink: #14602c; }
@@ -1725,6 +1800,129 @@ article > h2,
 @media (prefers-reduced-motion: reduce){
   :root[data-mode="dark"] .bg-strip{ display: none; }
 }
+
+/* =========================
+   Screenshot gallery with a light/dark switch
+
+   Every shot ships as a pair of images. Which one shows is driven by
+   data-shot-mode on the <figure>, so a shot can be flipped on its own, and the
+   header switch flips all of them at once by setting the same attribute on each.
+
+   Both images are in the markup rather than swapped by src, so there is no
+   flash of a missing image on toggle. The off-state one is display:none, which
+   keeps it out of the accessibility tree — the visible one carries the alt text
+   and the hidden one is aria-hidden, so a screen reader hears one description
+   per shot rather than two.
+========================= */
+.shot-grid{
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(22rem, 1fr));
+  gap: 1.1rem;
+  margin: 1rem 0 0;
+}
+
+.shot{
+  margin: 0;
+  border: 1px solid color-mix(in srgb, var(--accent) 34%, transparent);
+  background: var(--panel-2);
+  padding: .55rem .55rem .35rem;
+}
+
+.shot-frame{
+  background: var(--img-bg);
+  border: 1px solid var(--hair);
+  overflow: hidden;
+}
+
+.shot-frame img{
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* light is the resting state; the dark twin is swapped in by the attribute */
+.shot .shot-dark{ display: none; }
+.shot[data-shot-mode="dark"] .shot-light{ display: none; }
+.shot[data-shot-mode="dark"] .shot-dark{ display: block; }
+
+.shot figcaption{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .75rem;
+  flex-wrap: wrap;
+  margin-top: .45rem;
+  font-size: .92rem;
+  color: var(--text-2);
+}
+
+/* =========================
+   Sideways switch
+
+   A real <button role="switch">, not a checkbox, so it announces as "Dark, on"
+   and responds to Space and Enter the way a switch is expected to. The track is
+   squared off to match everything else on the site.
+========================= */
+.switch{
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  appearance: none;
+  border: 0;
+  background: none;
+  padding: .2rem;
+  font: inherit;
+  font-size: .82rem;
+  font-weight: 600;
+  color: var(--accent-ink);
+  cursor: pointer;
+}
+
+.switch-track{
+  position: relative;
+  flex: 0 0 auto;
+  width: 40px;
+  height: 21px;
+  border: 1px solid color-mix(in srgb, var(--accent) 55%, transparent);
+  background: var(--sunken);
+  transition: background .25s ease, border-color .25s ease;
+}
+
+.switch-thumb{
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 15px;
+  height: 15px;
+  background: var(--accent);
+  transition: transform .25s ease;
+}
+
+.switch[aria-checked="true"] .switch-track{
+  background: color-mix(in srgb, var(--accent) 28%, transparent);
+  border-color: var(--accent);
+}
+.switch[aria-checked="true"] .switch-thumb{ transform: translateX(19px); }
+
+.switch:focus-visible{
+  outline: 2px solid var(--accent-ink);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce){
+  .switch-track, .switch-thumb{ transition: none; }
+}
+
+/* The header copy of the switch sits with the page title rather than in a card. */
+.switch-all{
+  margin-top: .3rem;
+  font-size: .9rem;
+}
+
+/* Until the pair exists on disk, a missing file would otherwise collapse the
+   frame to nothing and look like a layout bug rather than a missing asset. */
+.shot-frame img:not([src]),
+.shot-frame img[src=""]{ min-height: 10rem; }
 
 /* =========================
    Responsive

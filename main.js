@@ -15,7 +15,31 @@
     yearEl.textContent = new Date().getFullYear();
   }
 
-  /* ---- Light / dark switch ---- */
+  /* ---- Light / dark switch ----
+     Three states, not two: 'light', 'dark', or nothing stored, which means
+     follow the operating system. Picking the mode the OS already asks for
+     CLEARS the stored value rather than pinning it — otherwise one press while
+     testing freezes the site in that mode for good, and changing the OS theme
+     afterwards appears to do nothing. Borrowed from the SimpleBank build.
+
+     The attribute is always written, because the stylesheet keys light mode off
+     [data-mode="light"] rather than off a media query. Following the OS
+     therefore means recomputing on change, which the listener below does. */
+  var KEY = 'mode';
+
+  function systemMode() {
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  }
+
+  function storedMode() {
+    try {
+      var v = localStorage.getItem(KEY);
+      return v === 'light' || v === 'dark' ? v : null;
+    } catch (e) {
+      return null;            // private browsing can throw on read
+    }
+  }
+
   var toggle = document.querySelector('.navbar-toggle');
   if (toggle) {
     var label = toggle.querySelector('.navbar-label');
@@ -31,10 +55,24 @@
     syncToggle();
 
     toggle.addEventListener('click', function () {
-      root.dataset.mode = root.dataset.mode === 'light' ? 'dark' : 'light';
-      try { localStorage.setItem('mode', root.dataset.mode); } catch (e) { /* private mode */ }
+      var next = root.dataset.mode === 'light' ? 'dark' : 'light';
+      try {
+        if (next === systemMode()) localStorage.removeItem(KEY);
+        else localStorage.setItem(KEY, next);
+      } catch (e) { /* the choice lasts until the page is closed */ }
+      root.dataset.mode = next;
       syncToggle();
     });
+
+    // With no stored preference the page tracks the OS for the rest of the session.
+    var osQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    var onOsChange = function () {
+      if (storedMode()) return;                 // an explicit choice wins
+      root.dataset.mode = systemMode();
+      syncToggle();
+    };
+    if (osQuery.addEventListener) osQuery.addEventListener('change', onOsChange);
+    else if (osQuery.addListener) osQuery.addListener(onOsChange);
   }
 
   /* ---- Email dropdown ----
@@ -124,6 +162,51 @@
         }, 3000);
       }
     });
+  }
+
+  /* ---- Screenshot light/dark switches ----
+     Each shot carries both images and shows one, chosen by data-shot-mode on
+     the <figure>. Shots start in whichever mode the page itself is in, so the
+     gallery matches its surroundings before anyone touches anything. */
+  var shots = document.querySelectorAll('[data-shot]');
+  if (shots.length) {
+    var setShot = function (fig, mode) {
+      fig.dataset.shotMode = mode;
+      var btn = fig.querySelector('[data-shot-toggle]');
+      if (btn) {
+        btn.setAttribute('aria-checked', mode === 'dark' ? 'true' : 'false');
+        var l = btn.querySelector('[data-shot-label]');
+        if (l) l.textContent = mode === 'dark' ? 'Dark' : 'Light';
+      }
+    };
+
+    var startMode = root.dataset.mode === 'dark' ? 'dark' : 'light';
+    Array.prototype.forEach.call(shots, function (fig) {
+      setShot(fig, startMode);
+      var btn = fig.querySelector('[data-shot-toggle]');
+      if (btn) {
+        btn.addEventListener('click', function () {
+          setShot(fig, fig.dataset.shotMode === 'dark' ? 'light' : 'dark');
+        });
+      }
+    });
+
+    var all = document.querySelector('[data-shot-all]');
+    if (all) {
+      var syncAll = function (mode) {
+        all.setAttribute('aria-checked', mode === 'dark' ? 'true' : 'false');
+        var l = all.querySelector('[data-shot-all-label]');
+        if (l) l.textContent = mode === 'dark' ? 'Dark' : 'Light';
+        all.setAttribute('aria-label', 'Show every screenshot in ' +
+          (mode === 'dark' ? 'light' : 'dark') + ' mode');
+      };
+      syncAll(startMode);
+      all.addEventListener('click', function () {
+        var next = all.getAttribute('aria-checked') === 'true' ? 'light' : 'dark';
+        Array.prototype.forEach.call(shots, function (fig) { setShot(fig, next); });
+        syncAll(next);
+      });
+    }
   }
 
   /* ---- Project card disclosure ----

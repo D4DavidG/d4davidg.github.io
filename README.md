@@ -28,6 +28,7 @@ resume.html                     HTML resume mirror; links the PDF and CV
 
 project-knights-counsel.html    Case study — AI retrieval agent (NDA-scoped)
 project-build-recipe.html       Case study — LLM build-recipe inference study
+project-simplebank.html         Case study — AWS banking app (team build)
 project-pocketprofessors.html   Case study — MERN collectible app
 project-fitnessfunctions.html   Case study — PHP/MySQL enrollment system
 project-contact-manager.html    Case study — contact manager

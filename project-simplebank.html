@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>SimpleBank — Case Study</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="A full banking application built by a five-person team: REST API, immutable ledger, admin console, React front end, deployed on AWS. I ran the project and owned the design system.">
+  <link rel="canonical" href="https://d4davidg.github.io/project-simplebank.html">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400..800&display=swap">
+  <link rel="stylesheet" href="styles.css">
+  <meta name="theme-color" content="#ff4d4d">
+  <link rel="icon" href="/images/favicon.ico" sizes="32x32">
+  <link rel="icon" type="image/png" href="/images/favicon-192.png" sizes="192x192">
+  <link rel="apple-touch-icon" href="/images/favicon-180.png">
+  <script>/* Set the colour mode before first paint, or the page flashes.
+     A saved choice wins; otherwise the browser's own preference decides, and
+     light is the default when the browser states no preference either way. */
+  (function(){try{var m=localStorage.getItem('mode')||
+  (matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');
+  document.documentElement.dataset.mode=m;}catch(e){}})();</script>
+  <script src="main.js" defer></script>
+</head>
+
+<body class="theme-red">
+  <a class="skip-link" href="#main">Skip to main content</a>
+
+  <nav class="navbar" aria-label="Primary">
+      <a class="navbar-item navbar-home" href="index.html">
+        <img class="mark-dark" src="images/DGsqarecircle.png" alt="" aria-hidden="true"
+             width="1181" height="1181" decoding="async">
+        <img class="mark-light" src="images/DGsquarecirclelightmode.png" alt="" aria-hidden="true"
+             width="1181" height="1181" decoding="async">
+        <span class="navbar-label">David Gusmao</span>
+      </a>
+    <div class="navbar-scroll">
+      <a class="navbar-item" href="#overview">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.4" y="5" width="19.2" height="14" rx="2"/><path d="M2.4 9.6h19.2"/><path d="M6.4 14.4h4"/></svg>
+        <span class="navbar-label">Overview</span>
+      </a>
+      <a class="navbar-item" href="#role">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="3.6"/><path d="M4.6 20.4a7.4 7.4 0 0 1 14.8 0"/></svg>
+        <span class="navbar-label">My Role</span>
+      </a>
+      <a class="navbar-item" href="#backend">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><ellipse cx="12" cy="5.6" rx="8.2" ry="3.2"/><path d="M3.8 5.6v12.8c0 1.77 3.67 3.2 8.2 3.2s8.2-1.43 8.2-3.2V5.6"/><path d="M3.8 12c0 1.77 3.67 3.2 8.2 3.2s8.2-1.43 8.2-3.2"/></svg>
+        <span class="navbar-label">Backend</span>
+      </a>
+      <a class="navbar-item" href="#aws">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6.4 18.4a4.4 4.4 0 0 1-.55-8.77 6 6 0 0 1 11.63-1.4A3.9 3.9 0 0 1 18.4 18.4Z"/></svg>
+        <span class="navbar-label">AWS</span>
+      </a>
+      <a class="navbar-item" href="#design">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17.9 2.9a2.3 2.3 0 0 1 3.25 3.25l-7.6 7.6-3.25-3.25 7.6-7.6Z"/><path d="m10.3 10.5 3.25 3.25"/><path d="M8.9 12.4a2.9 2.9 0 0 1 2.9 2.9c0 2.4-2.25 4.3-5.4 4.3-1.1 0-2.1-.2-3-.6 1.2-.8 1.65-1.8 1.75-3a3.55 3.55 0 0 1 3.75-3.6Z"/></svg>
+        <span class="navbar-label">Design</span>
+      </a>
+      <a class="navbar-item" href="#screens">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.6" y="4" width="18.8" height="13.2" rx="2"/><path d="M8.4 21h7.2"/><path d="m6.4 14 3.4-3.8 2.6 2.6 2.4-2.8 3 4"/></svg>
+        <span class="navbar-label">Screens</span>
+      </a>
+    </div>
+    <button class="navbar-item navbar-toggle" type="button" aria-pressed="false"
+            aria-label="Switch to light mode">
+      <span class="icon-light"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4.3"/><path d="M12 1.8v2.6M12 19.6v2.6M22.2 12h-2.6M4.4 12H1.8M19.2 4.8l-1.85 1.85M6.65 17.35 4.8 19.2M19.2 19.2l-1.85-1.85M6.65 6.65 4.8 4.8"/></svg></span>
+      <span class="icon-dark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.6 14.4A8.6 8.6 0 0 1 9.6 3.4 8.6 8.6 0 1 0 20.6 14.4Z"/></svg></span>
+      <span class="navbar-label">Light</span>
+    </button>
+  </nav>
+
+  <header class="simple glass">
+    <h1 class="neon">SimpleBank</h1>
+    <p class="subtitle">
+      A full banking application — REST API, immutable ledger, admin console —
+      built by a five-person team and deployed on AWS.
+    </p>
+
+    <button class="switch switch-all" type="button" role="switch" aria-checked="false"
+            data-shot-all aria-label="Show every screenshot in dark mode">
+      <span class="switch-track"><span class="switch-thumb"></span></span>
+      <span class="switch-label">All screenshots: <strong data-shot-all-label>Light</strong></span>
+    </button>
+  </header>
+
+  <main id="main">
+    <article>
+      <p class="thesis">
+        Money is an integer number of cents, the ledger only ever appends, and no
+        balance is ever computed in the browser. Most of what makes a banking app
+        trustworthy is a handful of rules you decide once and then refuse to break.
+      </p>
+
+      <dl class="facts">
+        <div>
+          <dt>Role</dt>
+          <dd>Project manager &amp; front-end lead</dd>
+        </div>
+        <div>
+          <dt>Team</dt>
+          <dd>5 people</dd>
+        </div>
+        <div>
+          <dt>Date</dt>
+          <dd>September 2026</dd>
+        </div>
+        <div>
+          <dt>Backend</dt>
+          <dd>Python standard library only</dd>
+        </div>
+        <div>
+          <dt>API</dt>
+          <dd>19 routes, token-authenticated</dd>
+        </div>
+        <div>
+          <dt>Deployment</dt>
+          <dd>AWS — CloudFront, S3, DocumentDB</dd>
+        </div>
+      </dl>
+
+      <ul class="stack stack-standalone">
+        <li>Python 3.10+</li>
+        <li>React 19</li>
+        <li>Vite</li>
+        <li>MongoDB Atlas</li>
+        <li>AWS CloudFront</li>
+        <li>AWS S3</li>
+        <li>Amazon DocumentDB</li>
+        <li>JSON Web Tokens</li>
+      </ul>
+
+      <p class="callout">
+        <strong>Live at
+        <a href="https://d1ws2llwooqj6z.cloudfront.net/" target="_blank" rel="noopener">d1ws2llwooqj6z.cloudfront.net</a></strong>
+        · source on
+        <a href="https://github.com/D4DavidG/SimpleBankApplicationG2" target="_blank" rel="noopener">GitHub</a>.
+        The palette borrows from a well-known bank's colours; none of its logo,
+        wordmark or name appears anywhere, which is a deliberate line rather than
+        an oversight.
+      </p>
+
+      <h2 id="overview">What it does</h2>
+      <p>
+        Users register, open accounts, deposit, withdraw, transfer money to another
+        person by name, and read a paginated transaction history. Admins freeze and
+        unfreeze accounts with a recorded reason, post correcting ledger entries,
+        and read an audit log of who did what to which account and why. Admins hold
+        no accounts of their own — the separation is enforced in the service layer,
+        not just hidden in the interface.
+      </p>
+      <p>
+        The backend runs on the Python standard library. No framework, no
+        third-party package, nothing to install. That is a deliberate constraint:
+        it keeps the whole system installable and gradeable on any machine with
+        Python on it, and it forced every routing, auth and serialisation decision
+        to be made explicitly rather than inherited from a framework's defaults.
+      </p>
+
+      <h2 id="role">What I did</h2>
+      <ul>
+        <li>
+          <strong>Project manager.</strong> Scope, work sequencing, task assignment
+          across five people, and the conventions document the team worked from.
+          I authored 41 of the repository's 99 commits.
+        </li>
+        <li>
+          <strong>Full stack.</strong> Everyone on the team worked across both
+          halves; I wrote backend service code and front-end alike.
+        </li>
+        <li>
+          <strong>Front-end lead</strong> for everything except the admin console.
+          I did add features into it, including the user search.
+        </li>
+        <li>
+          <strong>Design system, theming and dark mode</strong> — the part I owned
+          end to end, and the part worth reading about below.
+        </li>
+        <li>
+          <strong>The vision.</strong> What the product should feel like, and the
+          standard the interface had to hold to.
+        </li>
+      </ul>
+
+      <h2 id="backend">The rules that shape everything</h2>
+      <p>
+        The architecture is strictly layered — controller, serialisers, services,
+        models, repository — and each layer depends only on the one below it. The
+        rule is enforced rather than asserted: the business-rule test suite never
+        imports the HTTP layer at all, so if a rule leaked upward into a route
+        handler the tests could not reach it.
+      </p>
+
+      <div class="decision">
+        <h3>Money is an integer number of cents</h3>
+        <p>
+          <code>123456</code> is £1,234.56. The API rejects <code>25.00</code> and
+          <code>"2500"</code> with a 400 rather than guessing, because guessing
+          wrong on a decimal point is a hundredfold error. Dollars are parsed on
+          the way in and formatted on the way out; nothing in between ever holds a
+          float.
+        </p>
+      </div>
+
+      <div class="decision">
+        <h3>The ledger only appends</h3>
+        <p>
+          There is no route that sets a balance, and there should never be one. A
+          correction is a new entry in the opposite direction. An admin
+          reconciliation endpoint lists any account where the balance disagrees
+          with the sum of its ledger, which is the running proof that the rule
+          still holds.
+        </p>
+      </div>
+
+      <div class="decision">
+        <h3>The browser never computes a balance</h3>
+        <p>
+          Every write endpoint returns the whole updated account alongside the
+          transaction, and the client renders that. A balance derived on the client
+          is a balance that can silently disagree with the server.
+        </p>
+      </div>
+
+      <div class="decision">
+        <h3>A double-clicked button cannot move money twice</h3>
+        <p>
+          Deposits, withdrawals and transfers carry a client-generated transaction
+          id, one per submission attempt, so a retry or an impatient second click
+          resolves to the same transaction rather than a second one.
+        </p>
+      </div>
+
+      <div class="decision">
+        <h3>Never authorise off the token's role claim</h3>
+        <p>
+          The token is signed, so it is not forged — but tokens last a week, and a
+          user demoted on Tuesday still carries one saying ADMIN until the following
+          Monday. Authentication re-reads the user from storage and authorises on
+          what the record says now.
+        </p>
+        <p class="decision-rejected">
+          <strong>Also rejected:</strong> exposing account numbers in the interface.
+          A transfer names a <em>person</em> and the server resolves the account;
+          an account belonging to someone else reads as 404, not 403, so the API
+          does not confirm that it exists.
+        </p>
+      </div>
+
+      <h2 id="aws">Deployment on AWS</h2>
+      <p>
+        The application was taken from a local demo to a production deployment on
+        AWS, in three pieces:
+      </p>
+      <ul>
+        <li>
+          <strong>Front end</strong> — production bundle built with Vite, uploaded
+          to an S3 bucket and distributed through a CloudFront CDN, which is what
+          serves the live URL.
+        </li>
+        <li>
+          <strong>Back end</strong> — the Python runtime provisioned on an
+          EC2/App Runner instance, connected to the managed database, with
+          environment secrets held in AWS Systems Manager Parameter Store rather
+          than in the image or the repository.
+        </li>
+        <li>
+          <strong>Database</strong> — Amazon DocumentDB, the managed MongoDB
+          cluster, replacing the in-memory store used in development. The
+          repository layer made that a one-file swap, which is exactly the payoff
+          the layering was for.
+        </li>
+        <li>
+          <strong>Between them</strong> — HTTPS throughout, and CORS on the backend
+          scoped to the CloudFront origin, then verified end to end against the
+          production URL rather than assumed from a local run.
+        </li>
+      </ul>
+
+      <h2 id="design">The design system</h2>
+      <p>
+        This is the part I owned outright, and the part I would point at first. A
+        banking interface is almost entirely form fields, so the contrast that
+        matters is not only body text — it is the border of everything you can
+        click or type into.
+      </p>
+
+      <div class="decision">
+        <h3>Two brand tokens, not one</h3>
+        <p>
+          The brand navy exists twice: once as a <em>fill</em> that white text sits
+          on, and once as <em>ink</em> for headings. A colour bright enough to work
+          as a button almost never clears 4.5:1 as body text, and in dark mode the
+          two move in opposite directions — the fill stays dark enough for white
+          text while only the ink gets lighter. One token doing both jobs is what
+          makes a dark mode unreadable.
+        </p>
+      </div>
+
+      <div class="decision">
+        <h3>Every ratio computed, not eyeballed</h3>
+        <p>
+          All 85 colour tokens carry their measured contrast ratio in a comment
+          beside them — 93 annotations in total. Interactive borders are held to
+          the 3:1 required for non-text contrast, and they are a separate token
+          from the decorative dividers, which have no such requirement and would
+          otherwise drag the interactive ones down with them.
+        </p>
+      </div>
+
+      <div class="decision">
+        <h3>Dark mode has three states, not two</h3>
+        <p>
+          Light, dark, and <em>nothing stored</em> — which means follow the
+          operating system. Choosing the mode your system already asks for
+          <strong>clears</strong> the saved value rather than pinning it, so the
+          site keeps tracking the system if it changes later. Pinning on first
+          press is the common bug: the site stops following the system forever and
+          appears broken when the machine switches to dark at sunset.
+        </p>
+        <p class="decision-rejected">
+          <strong>Rejected:</strong> inverting the palette. The navy becomes cyan in
+          dark mode, chosen rather than lightened, and the surfaces, hero and field
+          borders each get their own second answer.
+        </p>
+      </div>
+
+      <h2 id="screens">Screenshots</h2>
+      <p>
+        Every shot exists in both modes. Flip one with its own switch, or flip all
+        of them with the switch at the top of the page.
+      </p>
+
+      <div class="shot-grid">
+
+        <figure class="shot" data-shot>
+          <div class="shot-frame">
+            <img class="shot-light" src="images/simplebank/home-light.webp" alt="SimpleBank home page: a credit card promotion beside the sign-in form" loading="lazy" decoding="async">
+            <img class="shot-dark" src="images/simplebank/home-dark.webp" alt="" aria-hidden="true" loading="lazy" decoding="async">
+          </div>
+          <figcaption>
+            <span>Home and sign in</span>
+            <button class="switch" type="button" role="switch" aria-checked="false" data-shot-toggle>
+              <span class="switch-track"><span class="switch-thumb"></span></span>
+              <span class="switch-label" data-shot-label>Light</span>
+            </button>
+          </figcaption>
+        </figure>
+
+        <figure class="shot" data-shot>
+          <div class="shot-frame">
+            <img class="shot-light" src="images/simplebank/signin-light.webp" alt="Sign-in page with email and password fields and a show-password control" loading="lazy" decoding="async">
+            <img class="shot-dark" src="images/simplebank/signin-dark.webp" alt="" aria-hidden="true" loading="lazy" decoding="async">
+          </div>
+          <figcaption>
+            <span>Sign in</span>
+            <button class="switch" type="button" role="switch" aria-checked="false" data-shot-toggle>
+              <span class="switch-track"><span class="switch-thumb"></span></span>
+              <span class="switch-label" data-shot-label>Light</span>
+            </button>
+          </figcaption>
+        </figure>
+
+        <figure class="shot" data-shot>
+          <div class="shot-frame">
+            <img class="shot-light" src="images/simplebank/register-light.webp" alt="Registration form with name, email, password and an optional staff code" loading="lazy" decoding="async">
+            <img class="shot-dark" src="images/simplebank/register-dark.webp" alt="" aria-hidden="true" loading="lazy" decoding="async">
+          </div>
+          <figcaption>
+            <span>Register</span>
+            <button class="switch" type="button" role="switch" aria-checked="false" data-shot-toggle>
+              <span class="switch-track"><span class="switch-thumb"></span></span>
+              <span class="switch-label" data-shot-label>Light</span>
+            </button>
+          </figcaption>
+        </figure>
+
+        <figure class="shot" data-shot>
+          <div class="shot-frame">
+            <img class="shot-light" src="images/simplebank/welcome-empty-light.webp" alt="Welcome screen for a new user who has not opened an account yet" loading="lazy" decoding="async">
+            <img class="shot-dark" src="images/simplebank/welcome-empty-dark.webp" alt="" aria-hidden="true" loading="lazy" decoding="async">
+          </div>
+          <figcaption>
+            <span>First visit, no accounts</span>
+            <button class="switch" type="button" role="switch" aria-checked="false" data-shot-toggle>
+              <span class="switch-track"><span class="switch-thumb"></span></span>
+              <span class="switch-label" data-shot-label>Light</span>
+            </button>
+          </figcaption>
+        </figure>
+
+        <figure class="shot" data-shot>
+          <div class="shot-frame">
+            <img class="shot-light" src="images/simplebank/open-account-light.webp" alt="Open account form with account type and opening balance" loading="lazy" decoding="async">
+            <img class="shot-dark" src="images/simplebank/open-account-dark.webp" alt="" aria-hidden="true" loading="lazy" decoding="async">
+          </div>
+          <figcaption>
+            <span>Open an account</span>
+            <button class="switch" type="button" role="switch" aria-checked="false" data-shot-toggle>
+              <span class="switch-track"><span class="switch-thumb"></span></span>
+              <span class="switch-label" data-shot-label>Light</span>
+            </button>
+          </figcaption>
+        </figure>
+
+        <figure class="shot" data-shot>
+          <div class="shot-frame">
+            <img class="shot-light" src="images/simplebank/accounts-light.webp" alt="Account list showing checking, savings and credit balances" loading="lazy" decoding="async">
+            <img class="shot-dark" src="images/simplebank/accounts-dark.webp" alt="" aria-hidden="true" loading="lazy" decoding="async">
+          </div>
+          <figcaption>
+            <span>Your accounts</span>
+            <button class="switch" type="button" role="switch" aria-checked="false" data-shot-toggle>
+              <span class="switch-track"><span class="switch-thumb"></span></span>
+              <span class="switch-label" data-shot-label>Light</span>
+            </button>
+          </figcaption>
+        </figure>
+
+        <figure class="shot" data-shot>
+          <div class="shot-frame">
+            <img class="shot-light" src="images/simplebank/account-details-light.webp" alt="Detail view for one account with owner, balance, type and status" loading="lazy" decoding="async">
+            <img class="shot-dark" src="images/simplebank/account-details-dark.webp" alt="" aria-hidden="true" loading="lazy" decoding="async">
+          </div>
+          <figcaption>
+            <span>Account details</span>
+            <button class="switch" type="button" role="switch" aria-checked="false" data-shot-toggle>
+              <span class="switch-track"><span class="switch-thumb"></span></span>
+              <span class="switch-label" data-shot-label>Light</span>
+            </button>
+          </figcaption>
+        </figure>
+
+        <figure class="shot" data-shot>
+          <div class="shot-frame">
+            <img class="shot-light" src="images/simplebank/dashboard-light.webp" alt="Signed-in home page with the promotion above the account list" loading="lazy" decoding="async">
+            <img class="shot-dark" src="images/simplebank/dashboard-dark.webp" alt="" aria-hidden="true" loading="lazy" decoding="async">
+          </div>
+          <figcaption>
+            <span>Dashboard</span>
+            <button class="switch" type="button" role="switch" aria-checked="false" data-shot-toggle>
+              <span class="switch-track"><span class="switch-thumb"></span></span>
+              <span class="switch-label" data-shot-label>Light</span>
+            </button>
+          </figcaption>
+        </figure>
+
+        <figure class="shot" data-shot>
+          <div class="shot-frame">
+            <img class="shot-light" src="images/simplebank/profile-light.webp" alt="Profile page showing name, email, role and member-since date" loading="lazy" decoding="async">
+            <img class="shot-dark" src="images/simplebank/profile-dark.webp" alt="" aria-hidden="true" loading="lazy" decoding="async">
+          </div>
+          <figcaption>
+            <span>My details</span>
+            <button class="switch" type="button" role="switch" aria-checked="false" data-shot-toggle>
+              <span class="switch-track"><span class="switch-thumb"></span></span>
+              <span class="switch-label" data-shot-label>Light</span>
+            </button>
+          </figcaption>
+        </figure>
+
+        <figure class="shot" data-shot>
+          <div class="shot-frame">
+            <img class="shot-light" src="images/simplebank/deposit-light.webp" alt="Deposit form with an account picker and an amount field" loading="lazy" decoding="async">
+            <img class="shot-dark" src="images/simplebank/deposit-dark.webp" alt="" aria-hidden="true" loading="lazy" decoding="async">
+          </div>
+          <figcaption>
+            <span>Deposit</span>
+            <button class="switch" type="button" role="switch" aria-checked="false" data-shot-toggle>
+              <span class="switch-track"><span class="switch-thumb"></span></span>
+              <span class="switch-label" data-shot-label>Light</span>
+            </button>
+          </figcaption>
+        </figure>
+
+        <figure class="shot" data-shot>
+          <div class="shot-frame">
+            <img class="shot-light" src="images/simplebank/withdraw-light.webp" alt="Withdrawal form with an account picker and an amount field" loading="lazy" decoding="async">
+            <img class="shot-dark" src="images/simplebank/withdraw-dark.webp" alt="" aria-hidden="true" loading="lazy" decoding="async">
+          </div>
+          <figcaption>
+            <span>Withdraw</span>
+            <button class="switch" type="button" role="switch" aria-checked="false" data-shot-toggle>
+              <span class="switch-track"><span class="switch-thumb"></span></span>
+              <span class="switch-label" data-shot-label>Light</span>
+            </button>
+          </figcaption>
+        </figure>
+
+        <figure class="shot" data-shot>
+          <div class="shot-frame">
+            <img class="shot-light" src="images/simplebank/transfer-light.webp" alt="Transfer form: pick an account, search for a person, enter an amount" loading="lazy" decoding="async">
+            <img class="shot-dark" src="images/simplebank/transfer-dark.webp" alt="" aria-hidden="true" loading="lazy" decoding="async">
+          </div>
+          <figcaption>
+            <span>Send money</span>
+            <button class="switch" type="button" role="switch" aria-checked="false" data-shot-toggle>
+              <span class="switch-track"><span class="switch-thumb"></span></span>
+              <span class="switch-label" data-shot-label>Light</span>
+            </button>
+          </figcaption>
+        </figure>
+
+        <figure class="shot" data-shot>
+          <div class="shot-frame">
+            <img class="shot-light" src="images/simplebank/history-light.webp" alt="Paginated history table with date, type, amount and resulting balance" loading="lazy" decoding="async">
+            <img class="shot-dark" src="images/simplebank/history-dark.webp" alt="" aria-hidden="true" loading="lazy" decoding="async">
+          </div>
+          <figcaption>
+            <span>Transaction history</span>
+            <button class="switch" type="button" role="switch" aria-checked="false" data-shot-toggle>
+              <span class="switch-track"><span class="switch-thumb"></span></span>
+              <span class="switch-label" data-shot-label>Light</span>
+            </button>
+          </figcaption>
+        </figure>
+
+      </div>
+
+      <h2 id="limits">What is not done</h2>
+      <p>
+        Stating the boundary is part of the work.
+      </p>
+      <ul>
+        <li>
+          <strong>Deliberately skipped:</strong> refresh tokens, httpOnly cookie
+          sessions, and login rate limiting. All three are the right end state for
+          a real bank; none was in scope here.
+        </li>
+        <li>
+          <strong>No live regions.</strong> Results that change without a page load
+          — a search narrowing, a transfer succeeding — are not announced to screen
+          readers yet. Everything else is wired: visible focus rings, described
+          and invalid states on fields, and tabular figures so money columns align.
+        </li>
+        <li>
+          <strong>The development server is not a production server.</strong>
+          Python's <code>http.server</code> is single-threaded, and it was the right
+          choice for a project whose backend had to install with zero setup.
+        </li>
+      </ul>
+
+      <hr>
+
+      <p>
+        More work on the <a href="work.html">projects page</a>, or back to
+        <a href="index.html#work">Selected Work</a>.
+      </p>
+    </article>
+  </main>
+
+  <footer>
+    <p><span id="year"></span> David Gusmao ·
+      <a href="https://github.com/D4DavidG" target="_blank" rel="noopener">GitHub</a> ·
+      <a href="https://www.linkedin.com/in/david-e-gusmao/" target="_blank" rel="noopener">LinkedIn</a>
+    </p>
+  </footer>
+</body>
+</html>

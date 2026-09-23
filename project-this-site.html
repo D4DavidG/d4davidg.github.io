@@ -180,18 +180,29 @@
         <li>
           <strong>The accent</strong> is a class on <code>&lt;body&gt;</code>. Each project page
           carries its own: green for the site itself, amber for Knights Counsel, sky for
-          the build-inference study, gold for PocketProfessors, aqua for FitnessFunctions, lime for the
-          Contact Manager.
+          the build-inference study, red for SimpleBank, gold for PocketProfessors, aqua for
+          FitnessFunctions, lime for the Contact Manager.
         </li>
       </ul>
       <p>
         Light mode needed more than an inverted background, and it took the longest of anything
         here to get right. Neon on white is unreadable — the accents sit at roughly 1.3:1 against
-        it — so each theme declares a separate <code>--accent-ink</code>, a darkened version used
-        for text and links that clears Web Content Accessibility Guidelines (WCAG) AA, while the bright value stays for glows and borders
-        where contrast does not apply. The site green goes further and becomes a forest green
-        outright: the neon simply does not belong on a light page, and half-measures looked worse
-        than committing to a different colour.
+        it — so <em>every</em> accent is re-chosen for light mode rather than lightened. The site
+        green becomes a forest green, the cyan a deep teal, the amber a burnt orange, and so on
+        down the list. Half-measures looked worse than committing to a different colour.
+      </p>
+      <p>
+        Each theme carries two values and the split is the load-bearing part.
+        <code>--accent</code> is the <strong>fill</strong> — the nav bar, the filled buttons — with
+        white lettering on it, so it is measured white-on-fill. <code>--accent-ink</code> is the
+        same colour used as <strong>text</strong>, so it is measured against the page background.
+        Both clear Web Content Accessibility Guidelines (WCAG) AA, and every ratio is recorded in
+        the stylesheet beside the value rather than left to be re-derived later.
+      </p>
+      <p>
+        Measuring against the real page background rather than against pure white is what caught
+        the one failure: the lime ink read fine on white and came to 4.08:1 against the actual
+        page, which is a shade off white. It is darker now.
       </p>
       <p>
         The panels are also more transparent in light mode than in dark, and the page behind them
