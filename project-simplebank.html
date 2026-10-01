@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>SimpleBank — Case Study</title>
+  <title>SimpleBank: Case Study</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="A full banking application built by a five-person team: REST API, immutable ledger, admin console, React front end, deployed on AWS. I ran the project and owned the design system.">
   <link rel="canonical" href="https://d4davidg.github.io/project-simplebank.html">
@@ -71,8 +71,8 @@
   <header class="simple glass">
     <h1 class="neon">SimpleBank</h1>
     <p class="subtitle">
-      A full banking application — REST API, immutable ledger, admin console —
-      built by a five-person team and deployed on AWS.
+      A full banking application with a REST API, an immutable ledger and an admin
+      console, built by a five-person team and deployed on AWS.
     </p>
 
     <button class="switch switch-all" type="button" role="switch" aria-checked="false"
@@ -84,12 +84,6 @@
 
   <main id="main">
     <article>
-      <p class="thesis">
-        Money is an integer number of cents, the ledger only ever appends, and no
-        balance is ever computed in the browser. Most of what makes a banking app
-        trustworthy is a handful of rules you decide once and then refuse to break.
-      </p>
-
       <dl class="facts">
         <div>
           <dt>Role</dt>
@@ -97,7 +91,7 @@
         </div>
         <div>
           <dt>Team</dt>
-          <dd>5 people</dd>
+          <dd>4 people</dd>
         </div>
         <div>
           <dt>Date</dt>
@@ -113,7 +107,7 @@
         </div>
         <div>
           <dt>Deployment</dt>
-          <dd>AWS — CloudFront, S3, DocumentDB</dd>
+          <dd>AWS: CloudFront, S3, DocumentDB</dd>
         </div>
       </dl>
 
@@ -144,7 +138,7 @@
         person by name, and read a paginated transaction history. Admins freeze and
         unfreeze accounts with a recorded reason, post correcting ledger entries,
         and read an audit log of who did what to which account and why. Admins hold
-        no accounts of their own — the separation is enforced in the service layer,
+        no accounts of their own. The separation is enforced in the service layer,
         not just hidden in the interface.
       </p>
       <p>
@@ -171,8 +165,8 @@
           I did add features into it, including the user search.
         </li>
         <li>
-          <strong>Design system, theming and dark mode</strong> — the part I owned
-          end to end, and the part worth reading about below.
+          <strong>Design system, theming and dark mode.</strong> The part I owned end
+          to end, and the part worth reading about below.
         </li>
         <li>
           <strong>The vision.</strong> What the product should feel like, and the
@@ -182,8 +176,8 @@
 
       <h2 id="backend">The rules that shape everything</h2>
       <p>
-        The architecture is strictly layered — controller, serialisers, services,
-        models, repository — and each layer depends only on the one below it. The
+        The architecture is strictly layered (controller, serialisers, services,
+        models, repository) and each layer depends only on the one below it. The
         rule is enforced rather than asserted: the business-rule test suite never
         imports the HTTP layer at all, so if a rule leaked upward into a route
         handler the tests could not reach it.
@@ -232,7 +226,7 @@
       <div class="decision">
         <h3>Never authorise off the token's role claim</h3>
         <p>
-          The token is signed, so it is not forged — but tokens last a week, and a
+          The token is signed, so it is not forged, but tokens last a week, and a
           user demoted on Tuesday still carries one saying ADMIN until the following
           Monday. Authentication re-reads the user from storage and authorises on
           what the record says now.
@@ -252,24 +246,24 @@
       </p>
       <ul>
         <li>
-          <strong>Front end</strong> — production bundle built with Vite, uploaded
+          <strong>Front end.</strong> Production bundle built with Vite, uploaded
           to an S3 bucket and distributed through a CloudFront CDN, which is what
           serves the live URL.
         </li>
         <li>
-          <strong>Back end</strong> — the Python runtime provisioned on an
+          <strong>Back end.</strong> The Python runtime provisioned on an
           EC2/App Runner instance, connected to the managed database, with
           environment secrets held in AWS Systems Manager Parameter Store rather
           than in the image or the repository.
         </li>
         <li>
-          <strong>Database</strong> — Amazon DocumentDB, the managed MongoDB
+          <strong>Database.</strong> Amazon DocumentDB, the managed MongoDB
           cluster, replacing the in-memory store used in development. The
           repository layer made that a one-file swap, which is exactly the payoff
           the layering was for.
         </li>
         <li>
-          <strong>Between them</strong> — HTTPS throughout, and CORS on the backend
+          <strong>Between them.</strong> HTTPS throughout, and CORS on the backend
           scoped to the CloudFront origin, then verified end to end against the
           production URL rather than assumed from a local run.
         </li>
@@ -279,8 +273,8 @@
       <p>
         This is the part I owned outright, and the part I would point at first. A
         banking interface is almost entirely form fields, so the contrast that
-        matters is not only body text — it is the border of everything you can
-        click or type into.
+        matters is not only body text. It is the border of everything you can click
+        or type into.
       </p>
 
       <div class="decision">
@@ -289,8 +283,8 @@
           The brand navy exists twice: once as a <em>fill</em> that white text sits
           on, and once as <em>ink</em> for headings. A colour bright enough to work
           as a button almost never clears 4.5:1 as body text, and in dark mode the
-          two move in opposite directions — the fill stays dark enough for white
-          text while only the ink gets lighter. One token doing both jobs is what
+          two move in opposite directions: the fill stays dark enough for white text
+          while only the ink gets lighter. One token doing both jobs is what
           makes a dark mode unreadable.
         </p>
       </div>
@@ -299,7 +293,7 @@
         <h3>Every ratio computed, not eyeballed</h3>
         <p>
           All 85 colour tokens carry their measured contrast ratio in a comment
-          beside them — 93 annotations in total. Interactive borders are held to
+          beside them, 93 annotations in total. Interactive borders are held to
           the 3:1 required for non-text contrast, and they are a separate token
           from the decorative dividers, which have no such requirement and would
           otherwise drag the interactive ones down with them.
@@ -309,7 +303,7 @@
       <div class="decision">
         <h3>Dark mode has three states, not two</h3>
         <p>
-          Light, dark, and <em>nothing stored</em> — which means follow the
+          Light, dark, and <em>nothing stored</em>, which means follow the
           operating system. Choosing the mode your system already asks for
           <strong>clears</strong> the saved value rather than pinning it, so the
           site keeps tracking the system if it changes later. Pinning on first
@@ -526,9 +520,9 @@
           a real bank; none was in scope here.
         </li>
         <li>
-          <strong>No live regions.</strong> Results that change without a page load
-          — a search narrowing, a transfer succeeding — are not announced to screen
-          readers yet. Everything else is wired: visible focus rings, described
+          <strong>No live regions.</strong> Results that change without a page load,
+          such as a search narrowing or a transfer succeeding, are not announced to
+          screen readers yet. Everything else is wired: visible focus rings, described
           and invalid states on fields, and tabular figures so money columns align.
         </li>
         <li>

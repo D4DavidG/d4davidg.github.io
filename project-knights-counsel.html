@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>Knights Counsel — Case Study</title>
+  <title>Knights Counsel: Case Study</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Permission-aware AI retrieval agent for a university legal office. What I specified it must refuse to do, and the evaluation suite built to tell whether it actually refused.">
   <link rel="canonical" href="https://d4davidg.github.io/project-knights-counsel.html">
@@ -188,7 +188,7 @@
         </p>
         <p>
           When I looked at the evaluation logs, there were zero retrieval-precision failures
-          caused by mixed document types — which was the entire justification for splitting by
+          caused by mixed document types, which was the entire justification for splitting by
           category. The child agent also inherits the parent's knowledge source, which removed the
           folder scoping the split was supposed to buy. Meanwhile every orchestration hop cost
           latency and per-message credits.
@@ -203,7 +203,7 @@
         <p>
           Testing then produced a standing architectural rule: attaching the same document path to
           both a parent and a child produced duplicate retrieval and unstable citations, so a given
-          path is now attached to exactly one agent — never to both a parent and a child, and never
+          path is now attached to exactly one agent, never to both a parent and a child, and never
           to two children.
         </p>
       </div>
@@ -226,7 +226,7 @@
         <p class="decision-rejected">
           <strong>Rejected:</strong> treating any question containing a judgment component as
           wholly unanswerable. Refusing the retrievable half along with the rest is a defect, not
-          caution — the specified behavior is to relay the facts with citation first, then redirect
+          caution. The specified behavior is to relay the facts with citation first, then redirect
           the judgment.
         </p>
       </div>
@@ -244,7 +244,7 @@
           The first case could not be enforced from the agent's instructions at all. With
           ungrounded responses disabled, a query returning zero matches never reaches the model,
           so the platform's default fallback fires first. That wording had to be set on the
-          fallback topic instead — the first of several behaviors that had to migrate out of
+          fallback topic instead, the first of several behaviors that had to migrate out of
           instructions entirely.
         </p>
       </div>
@@ -262,7 +262,7 @@
           The rule that took a revision to get right is that it always proposes. A field it cannot
           determine is shown as not determined rather than left blank or invented; a low-confidence
           classification is still presented, marked as such, with the alternative it considered. An
-          earlier draft routed uncertain files to an unsorted holding area, which was wrong — an
+          earlier draft routed uncertain files to an unsorted holding area, which was wrong. An
           uncertain proposal a human can correct in one word beats no proposal, and a file quietly
           parked in a holding area is a file nobody is prompted to fix.
         </p>
@@ -291,7 +291,7 @@
       <div class="decision">
         <h3>Directive language, never advisory</h3>
         <p>
-          Testing established that soft prompt language — "prefer", "may ask" — is treated as
+          Testing established that soft prompt language ("prefer", "may ask") is treated as
           advisory by the model and dropped under pressure. I converted every required behavior to
           directive language and made that a standing authoring rule for the team.
         </p>
@@ -369,8 +369,8 @@
       <p>
         The most consequential defect surfaced through evaluation, not through use. The agent
         answered single-fact questions well, so on the surface it looked fine. But when a question
-        scoped a <em>set</em> rather than asking for a single fact — which agreements are governed
-        by law outside this state, the five most recent agreements for a given unit — the agent ran
+        scoped a <em>set</em> rather than asking for a single fact (which agreements are governed
+        by law outside this state, the five most recent agreements for a given unit), the agent ran
         a semantic search and then presented the unfiltered results as though they had been
         filtered and ordered.
       </p>
@@ -382,14 +382,14 @@
       <p>
         The root cause was an absent query predicate: semantic similarity cannot function as a
         filter, and no amount of instruction tuning changes that. The fix lived in structured
-        metadata columns — a workstream the team had been treating as a refinement. I moved it onto
+        metadata columns, a workstream the team had been treating as a refinement. I moved it onto
         the critical path.
       </p>
       <p>
         A second class of defect: an agent component's <em>description text</em> alone caused the
         orchestrator to assert that files had been uploaded and processed when the component's
         actions performed no such write. I confirmed the diagnosis against the platform's own
-        reasoning trace and turned it into a standing requirement — any component whose safety
+        reasoning trace and turned it into a standing requirement: any component whose safety
         property depends on a confirmation step must have a description that affirmatively rules
         out unperformed actions.
       </p>
@@ -398,14 +398,14 @@
       <p>
         <strong>Filenames over 100 characters, or containing parentheses, are silently skipped by
         the indexer.</strong> A skipped file is invisible to retrieval while looking perfectly
-        normal in the library — the most dangerous failure mode in the system, because nothing
+        normal in the library. That is the most dangerous failure mode in the system, because nothing
         anywhere reports it. Rather than rely on user discipline, intake validates and renames on
         upload and retains the original name in its own column. The internal working target is 80
         characters, so the margin absorbs category codes and dates without anyone hand-counting.
       </p>
       <p>
         <strong>Agent-written metadata can become a grounding hazard.</strong> Several schema
-        fields — summary, key issues — are authored by the agent rather than read from the
+        fields (summary, key issues) are authored by the agent rather than read from the
         document. Stored without distinction, a later retrieval could surface an agent-written
         sentence and cite it as though it were document content, violating the grounding rule
         through a metadata pathway rather than a prompting one. Those fields therefore carry an

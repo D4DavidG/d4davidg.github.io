@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>Mapping How LLMs Build Software — Case Study</title>
+  <title>Mapping How LLMs Build Software: Case Study</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="An applicability study measuring where LLM build-recipe inference works and where it fails, across six build systems, and whether difficulty tracks how much each ecosystem declares about its own dependencies.">
   <link rel="canonical" href="https://d4davidg.github.io/project-build-recipe.html">
@@ -127,8 +127,8 @@
         difficult to achieve. Developers spend hours bug fixing and setting up projects, trying to
         work out whether their build failures are even their own fault in the first place
         <a href="#ref-huang">[Huang-UnrelatedCI]</a>. The instructions needed to build a project
-        from scratch — which system packages to install, which toolchain version, which commands
-        and in what order — often only exist in a working copy of the project, or in the head of
+        from scratch (which system packages to install, which toolchain version, which commands
+        and in what order) often only exist in a working copy of the project, or in the head of
         whoever had it running before.
       </p>
       <p>
@@ -144,7 +144,7 @@
         A legacy Apache Java project can fail with a compilation error because it is only
         compatible with an older Java version, and nothing in the file tree mentions it. The only
         way a developer finds out is by building it, reading the error, and trying another Java
-        version. That loop is what this project measures — not as a separate target, but as one
+        version. That loop is what this project measures, not as a separate target, but as one
         failure category inside the scope below.
       </p>
 
@@ -165,7 +165,7 @@
       </p>
 
       <div class="decision">
-        <h3>Stage A — deterministic baseline</h3>
+        <h3>Stage A: deterministic baseline</h3>
         <p>
           Detect the build system by marker files, install the recorded system dependencies, run
           the default phase commands in a fresh container, and record success or failure per
@@ -174,7 +174,7 @@
       </div>
 
       <div class="decision">
-        <h3>Stage B — LLM acting on failures</h3>
+        <h3>Stage B: LLM acting on failures</h3>
         <p>
           For each program the baseline cannot build, the model receives a summary of the source
           tree and the failure log from Stage A, and proposes a corrected recipe: flags, toolchain
@@ -186,7 +186,7 @@
       <h3>What the output actually is</h3>
       <p>
         This is the part I had wrong in an earlier draft. I was describing the output as
-        "documentation", which is not something I can evaluate — there is no way to score whether a
+        "documentation", which is not something I can evaluate. There is no way to score whether a
         document lets someone "understand" a build. The output is a <strong>build recipe</strong>,
         as labelled fields, and it is scored two ways: does it build in a fresh container, and how
         does each field compare to the recipe a human recorded by hand for the same program.
@@ -195,7 +195,7 @@
         A working Dockerfile is a replicable recipe, and I do not want to claim otherwise. The
         difference is that a Dockerfile collapses everything into one artifact. Separating the
         build system, system dependencies, toolchain version and per-phase commands into named
-        fields is what makes per-component scoring possible — build system classification accuracy,
+        fields is what makes per-component scoring possible: build system classification accuracy,
         dependency precision and recall, toolchain version match, and per-phase outcomes, rather
         than a single build-succeeded bit.
       </p>
@@ -244,7 +244,7 @@
         declares. Maven and Gradle declare their dependencies, so a model can read them. Autotools
         and Make declare almost nothing, so dependencies only surface as configure or compile
         errors. Inference should be structurally easier where dependencies are stated and harder
-        where they are latent — and the contribution is mapping that gradient and explaining why.
+        where they are latent, and the contribution is mapping that gradient and explaining why.
       </p>
       <p>
         That also predicts <em>which</em> fields are easy. A build system is declared by the
@@ -282,8 +282,8 @@
         success rate on 420 repositories <a href="#ref-repo2run">[Repo2Run]</a>. CXXCrafter targets
         C and C++ projects specifically and reports a 78% build success rate
         <a href="#ref-cxxcrafter">[CXXCrafter]</a>. These are the two systems closest to mine, and
-        the comparison design runs my tool and theirs over each other's program sets — mine over
-        their corpora, theirs over the apt-installable subset — so that a reported success rate can
+        the comparison design runs my tool and theirs over each other's program sets (mine over
+        their corpora, theirs over the apt-installable subset) so that a reported success rate can
         be read against a corpus other than the one its own authors chose.
       </p>
       <p>
@@ -307,7 +307,7 @@
         </li>
         <li>
           <strong>What the model is given.</strong> Working from the raw source tree rather than
-          from a README or other natural-language artifact is a further difference — one I still
+          from a README or other natural-language artifact is a further difference, one I still
           need to confirm against their full paper rather than the abstract.
         </li>
       </ul>
@@ -351,7 +351,7 @@
         </li>
         <li>
           <strong>RQ3.</strong> Does constraining the model to domain-specific tool wrappers,
-          instead of raw shell access, improve build success and reduce invalid or unsafe actions —
+          instead of raw shell access, improve build success and reduce invalid or unsafe actions,
           and does that hold beyond GradleFixer's single Android/Gradle setting?
         </li>
         <li>
@@ -369,7 +369,7 @@
         <li>
           <strong>The evaluation set only includes apt-installable programs</strong>, which removes
           the harder dependency cases. Programs needing pip, npm or cargo, specific hardware, or a
-          legacy version that is no longer packaged are out of bounds — 141 of the 1002 programs in
+          legacy version that is no longer packaged are out of bounds, and 141 of the 1002 programs in
           the dataset are excluded on those grounds. Within this scope the study can still measure
           detection accuracy, toolchain version selection, phase command correctness, and recovery
           through flag and version changes.
@@ -399,7 +399,7 @@
       <h2 id="status">Status</h2>
       <p class="callout">
         <strong>Study design settled; environment and harness in progress; results pending.</strong>
-        Splitting what is designed from what is running is deliberate — it is the same honesty that
+        Splitting what is designed from what is running is deliberate. It is the same honesty that
         makes the evaluation argument credible in the first place.
       </p>
 

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>How This Site Is Built — Colophon</title>
+  <title>How This Site Is Built: Colophon</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="A colophon for a hand-written portfolio: no framework, no build step, and the accessibility and theming decisions behind it, explained from inside the artifact.">
   <link rel="canonical" href="https://d4davidg.github.io/project-this-site.html">
@@ -99,7 +99,7 @@
       <p>
         Every page is a flat <code>.html</code> file at the repository root. They share one
         <code>styles.css</code> and one <code>main.js</code>, loaded with <code>defer</code>. There
-        is no bundler, no template engine, and no generated output — what is in the repository is
+        is no bundler, no template engine, and no generated output. What is in the repository is
         what the browser receives.
       </p>
       <p>
@@ -114,7 +114,7 @@
       <ul>
         <li>
           <strong>Readability comes first.</strong> Body text is Inter at 17px with a 1.62 line
-          height, picked for its large x-height — that is what keeps the smaller supporting lines
+          height, picked for its large x-height. That is what keeps the smaller supporting lines
           legible at the size they are set. The neon accent is loud, so it stays on borders,
           headings and glows and never lands on a paragraph you actually have to read. Dates,
           roles and captions use a lighter grey that still clears contrast, rather than the faint
@@ -134,12 +134,12 @@
           main content" link. It sits off-screen until it is focused, then slides into view. It is
           moved out of the way with positioning rather than hidden with
           <code>display:none</code>, because an element that is display-hidden cannot be focused at
-          all — which would defeat the entire point of having it.
+          all, which would defeat the entire point of having it.
         </li>
         <li>
           <strong>Landmarks are named, not anonymous.</strong> Sections are tied to their own
           heading with <code>aria-labelledby</code>, so a screen reader reads out something closer
-          to a table of contents — "Currently", "Selected Work", "Skills" — instead of "region,
+          to a table of contents ("Currently", "Selected Work", "Skills") instead of "region,
           region, region."
         </li>
         <li>
@@ -152,7 +152,7 @@
           <strong>Motion is optional.</strong> If your system is set to reduce motion, the smooth
           scrolling, the section-jump highlight, the card reveal and the animated footer art all
           switch off. The footer art is removed outright rather than slowed down, because a looping
-          GIF has no pause control — not showing it is the only honest answer.
+          GIF has no pause control, so not showing it is the only honest answer.
         </li>
         <li>
           <strong>Colour is never the only signal.</strong> Links carry an underline on hover and
@@ -174,7 +174,7 @@
         <li>
           <strong>Light or dark</strong> is set on the root element as a <code>data-mode</code>
           attribute. A tiny inline script in every <code>&lt;head&gt;</code> applies the stored or
-          system preference <em>before first paint</em> — if it ran in the deferred script instead,
+          system preference <em>before first paint</em>. If it ran in the deferred script instead,
           the page would flash dark before switching to light.
         </li>
         <li>
@@ -186,14 +186,14 @@
       </ul>
       <p>
         Light mode needed more than an inverted background, and it took the longest of anything
-        here to get right. Neon on white is unreadable — the accents sit at roughly 1.3:1 against
-        it — so <em>every</em> accent is re-chosen for light mode rather than lightened. The site
+        here to get right. Neon on white is unreadable, since the accents sit at roughly 1.3:1 against
+        it, so so <em>every</em> accent is re-chosen for light mode rather than lightened. The site
         green becomes a forest green, the cyan a deep teal, the amber a burnt orange, and so on
         down the list. Half-measures looked worse than committing to a different colour.
       </p>
       <p>
         Each theme carries two values and the split is the load-bearing part.
-        <code>--accent</code> is the <strong>fill</strong> — the nav bar, the filled buttons — with
+        <code>--accent</code> is the <strong>fill</strong> (the nav bar, the filled buttons) with
         white lettering on it, so it is measured white-on-fill. <code>--accent-ink</code> is the
         same colour used as <strong>text</strong>, so it is measured against the page background.
         Both clear Web Content Accessibility Guidelines (WCAG) AA, and every ratio is recorded in
@@ -207,7 +207,7 @@
       <p>
         The panels are also more transparent in light mode than in dark, and the page behind them
         is a shade off white rather than pure white, so the cards read as layers instead of
-        rectangles drawn on a sheet of paper. I did not decide any of that alone — I asked people
+        rectangles drawn on a sheet of paper. I did not decide any of that alone. I asked people
         who actually prefer light mode which versions were easier on their eyes, and went with what
         they picked rather than what looked good to me at midnight in a dark room. The two modes
         are meant to be equally finished, not one real design and one accessibility checkbox.
@@ -218,8 +218,8 @@
         About 120 lines, and every page works without it. It fills in the footer year, toggles
         colour mode and remembers the choice, opens the email dropdown, copies the address to the
         clipboard, expands a project card when you tap it, and flips the coin on a touch screen
-        where there is no hover to trigger it. What it deliberately does not do is render anything
-        — every word on this site is in the HTML, not assembled by a script after the fact.
+        where there is no hover to trigger it. What it deliberately does not do is render anything.
+Every word on this site is in the HTML, not assembled by a script after the fact.
       </p>
 
       <h2 id="limits">Limits</h2>
